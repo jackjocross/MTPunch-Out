@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class LittleMacController : MonoBehaviour {
+
+	static public LittleMacController LittleMac;
+
 	/*Set in inspector*/
 	public float distanceX;
 	public float distanceY;
@@ -11,34 +14,35 @@ public class LittleMacController : MonoBehaviour {
 	float minX;
 	float maxX;
 	float maxY;
-	float minY;
+
 	float originalX;
 	float originalY;
 	float previousX;
 	float previousY;
 
 	private LittleMacAnimator animatorScript;
-	private int numberOfStars;
+
+	void Awake(){
+
+	}
 	
 	// Use this for initialization
 	void Start () {
-		animatorScript=this.GetComponent<LittleMacAnimator>();	
+		animatorScript=this.GetComponent<LittleMacAnimator>();
+
 		minX=transform.position.x-distanceX;
 		maxX=transform.position.x+distanceX;
 		originalX = transform.position.x;
 		previousX = originalX;
-	
+
 		maxY = transform.position.y + distanceY;
-		minY = transform.position.y - distanceY;
 		originalY = transform.position.y;
 		previousY = originalY;
-
-		numberOfStars=0;
-
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		//print(this.transform.position.x);
 		/*GetKeyDown only returns selection for one frame so need to check GetKey to check if key is held down*/
 		if (Input.GetKey (KeyCode.UpArrow)) {
 			/*Right Face Punch*/
@@ -82,17 +86,23 @@ public class LittleMacController : MonoBehaviour {
 		}
 
 		/*Directional Inputs*/
+
+		/*If down key (or S) is held down, should stay in shield position*/
 		if(Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S)){
 			if(Time.time-animatorScript.animator.GetFloat("shieldTime")<tapSpeed){
 				animatorScript.Duck();
 				animatorScript.animator.SetFloat("shieldTime",0);
 			}
 			else{
-				animatorScript.Shield();
+				animatorScript.ShieldBegin();
 				/*Record time of shield press*/
 				animatorScript.animator.SetFloat("shieldTime",Time.time);
 			}
 		}
+		if (Input.GetKeyUp (KeyCode.DownArrow) || Input.GetKeyUp (KeyCode.S)) {
+			animatorScript.ShieldEnd();
+		}
+
 		if(Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)){
 			animatorScript.DodgeRight();
 		}
@@ -109,6 +119,10 @@ public class LittleMacController : MonoBehaviour {
 		}
 		/*B Button*/
 		if (Input.GetKeyDown (KeyCode.Z) || Input.GetKeyDown (KeyCode.Comma)) {
+			/*if(IsAnimationActionPlaying()){
+				print ("idle state");
+				return;
+			}*/
 			animatorScript.PunchLeftNormal();
 		}
 		/*Select*/
@@ -116,78 +130,8 @@ public class LittleMacController : MonoBehaviour {
 		}
 	}
 
-	void OnAnimatorMove(){
-		int currentStateHash=animatorScript.animator.GetCurrentAnimatorStateInfo(0).tagHash;
-		AnimationInfo[] animationInfo = animatorScript.animator.GetCurrentAnimationClipState(0);
-		float time=animationInfo[0].clip.length;
-
-		//Get Current Position
-		Vector3 position = transform.position;
-
-		if(currentStateHash==Animator.StringToHash("Dodge Left")){
-			//If Current Position is start, start moving to the left
-			if(position.x>=originalX){
-				position.x-=((distanceX*2.0f)*(Time.deltaTime/time));
-			}
-			//If Current Position is end, start moving to the right
-			else if(position.x<=minX){
-				position.x+=(distanceX*2.0f)*(Time.deltaTime/time);
-			}
-			//Current Position is somewhere in the middle of start and end
-			else{
-				if(previousX<position.x){
-					position.x+=(distanceX*2.0f)*(Time.deltaTime/time);
-				}
-				else{
-					position.x-=(distanceX*2.0f)*(Time.deltaTime/time);
-				}
-			}
-			previousX=transform.position.x;
-			transform.position = position;
-		}
-
-		if (currentStateHash == Animator.StringToHash ("Dodge Right")) {
-			//If current position is start, start moving to the right
-			if(position.x<=originalX){
-				position.x+=((distanceX*2.0f)*(Time.deltaTime/time));
-			}
-			//If current position is end, start moving to the right
-			else if(position.x>=maxX){
-				position.x-=((distanceX*2.0f)*(Time.deltaTime/time));
-			}
-			//Curent position somewhere in middle
-			else{
-				if(previousX>position.x){
-					position.x-=(distanceX*2.0f)*(Time.deltaTime/time);
-				}
-				else{
-					position.x+=(distanceX*2.0f)*(Time.deltaTime/time);
-				}
-			}
-			previousX=transform.position.x;
-			transform.position=position;
-		}
-
-		if(currentStateHash==Animator.StringToHash("Punch Right Face") || currentStateHash==Animator.StringToHash("Punch Left Face")){
-			//If Current Position is start, start moving up
-			if(position.y<=originalY){
-				position.y+=(distanceY*2.0f)*(Time.deltaTime/time);
-			}
-			//If Current Position is end, start moving down
-			else if(position.y>=maxY){
-				position.y-=(distanceY*2.0f)*(Time.deltaTime/time);
-			}
-			else{
-				if(previousY<position.y){
-					position.y+=(distanceY*2.0f)*(Time.deltaTime/time);
-				}
-				else{
-					position.y-=(distanceY*2.0f)*(Time.deltaTime/time);
-				}
-			}
-			previousY=transform.position.y;
-			transform.position=position;
-		}
+	/*Return true if animation is playing besides idle*/
+	bool IsAnimationActionPlaying(){
+		return !animatorScript.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Idle");
 	}
-
 }
