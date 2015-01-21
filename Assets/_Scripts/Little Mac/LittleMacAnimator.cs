@@ -26,8 +26,12 @@ public class LittleMacAnimator : MonoBehaviour {
 		animator.SetTrigger("Dodge Left");
 	}
 
-	public void Shield(){
-		animator.SetTrigger ("Shield");
+	public void ShieldBegin(){
+		animator.SetBool ("Shield",true);
+	}
+
+	public void ShieldEnd(){
+		animator.SetBool("Shield",false);
 	}
 
 	public void PunchRightFace(){
@@ -57,5 +61,8 @@ public class LittleMacAnimator : MonoBehaviour {
 	public void Victory(){
 		animator.SetTrigger("Victory");
 	}
-	
+
+	public void Walk(){
+		animator.SetTrigger("Walk");
+	}
 }
