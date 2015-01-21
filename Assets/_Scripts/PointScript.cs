@@ -21,15 +21,44 @@ public class PointScript : MonoBehaviour {
 
 		pointsOnes.GetComponent<SpriteRenderer>().sprite = digits[tempScore % 10].GetComponent<SpriteRenderer>().sprite;
 		tempScore = tempScore / 10;
-		pointsTens.GetComponent<SpriteRenderer>().sprite = digits[tempScore % 10].GetComponent<SpriteRenderer>().sprite;
+		if (tempScore == 0) {
+			pointsTens.GetComponent<SpriteRenderer>().sprite = null;
+		} else {
+			pointsTens.GetComponent<SpriteRenderer>().sprite = digits[tempScore % 10].GetComponent<SpriteRenderer>().sprite;
+		}
+
 		tempScore = tempScore / 10;
-		pointsHund.GetComponent<SpriteRenderer>().sprite = digits[tempScore % 10].GetComponent<SpriteRenderer>().sprite;
+
+		if (tempScore == 0) {
+			pointsHund.GetComponent<SpriteRenderer>().sprite = null;
+		} else {
+			pointsHund.GetComponent<SpriteRenderer>().sprite = digits[tempScore % 10].GetComponent<SpriteRenderer>().sprite;
+		}
+
 		tempScore = tempScore / 10;
-		pointsThou.GetComponent<SpriteRenderer>().sprite = digits[tempScore % 10].GetComponent<SpriteRenderer>().sprite;
+
+		if (tempScore == 0) {
+			pointsThou.GetComponent<SpriteRenderer>().sprite = null;
+		} else {
+			pointsThou.GetComponent<SpriteRenderer>().sprite = digits[tempScore % 10].GetComponent<SpriteRenderer>().sprite;
+		}
+
 		tempScore = tempScore / 10;
-		pointsTThou.GetComponent<SpriteRenderer>().sprite = digits[tempScore % 10].GetComponent<SpriteRenderer>().sprite;
+
+		if (tempScore == 0) {
+			pointsTThou.GetComponent<SpriteRenderer>().sprite = null;
+		} else {
+			pointsTThou.GetComponent<SpriteRenderer>().sprite = digits[tempScore % 10].GetComponent<SpriteRenderer>().sprite;
+		}
+
 		tempScore = tempScore / 10;
-		pointsHThou.GetComponent<SpriteRenderer>().sprite = digits[tempScore % 10].GetComponent<SpriteRenderer>().sprite;
+
+		if (tempScore == 0) {
+			pointsHThou.GetComponent<SpriteRenderer>().sprite = null;
+		} else {
+			pointsHThou.GetComponent<SpriteRenderer>().sprite = digits[tempScore % 10].GetComponent<SpriteRenderer>().sprite;
+		}
+
 	}
 
 	void resetScore() {
@@ -37,6 +66,6 @@ public class PointScript : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		addPoints (1);
+//		addPoints (1);
 	}
 }

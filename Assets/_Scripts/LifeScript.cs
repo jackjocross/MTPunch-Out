@@ -16,7 +16,13 @@ public class LifeScript : MonoBehaviour {
 
 		lifeOnes.GetComponent<SpriteRenderer>().sprite = digits[tempLives % 10].GetComponent<SpriteRenderer>().sprite;
 		tempLives = tempLives / 10;
-		lifeTens.GetComponent<SpriteRenderer>().sprite = digits[tempLives % 10].GetComponent<SpriteRenderer>().sprite;
+
+		if (tempLives == 0) {
+			lifeTens.GetComponent<SpriteRenderer> ().sprite = null;
+		} else {
+			lifeTens.GetComponent<SpriteRenderer>().sprite = digits[tempLives % 10].GetComponent<SpriteRenderer>().sprite;
+		}
+
 	}
 
 	void removeLife() {
@@ -25,6 +31,11 @@ public class LifeScript : MonoBehaviour {
 
 		lifeOnes.GetComponent<SpriteRenderer>().sprite = digits[tempLives % 10].GetComponent<SpriteRenderer>().sprite;
 		tempLives = tempLives / 10;
-		lifeTens.GetComponent<SpriteRenderer>().sprite = digits[tempLives % 10].GetComponent<SpriteRenderer>().sprite;
+
+		if (tempLives == 0) {
+			lifeTens.GetComponent<SpriteRenderer> ().sprite = null;
+		} else {
+			lifeTens.GetComponent<SpriteRenderer> ().sprite = digits [tempLives % 10].GetComponent<SpriteRenderer> ().sprite;
+		}
 	}
 }
