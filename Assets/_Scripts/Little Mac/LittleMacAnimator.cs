@@ -2,10 +2,14 @@
 using System.Collections;
 
 public class LittleMacAnimator : MonoBehaviour {
+
+	public static LittleMacAnimator LittleMacA;
+
 	public Animator animator;
 
 	void Awake(){
 		animator=GetComponent<Animator>();
+		LittleMacA = this;
 	}
 
 	// Use this for initialization

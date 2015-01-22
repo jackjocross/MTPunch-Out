@@ -6,6 +6,7 @@ public class LittleMacController : MonoBehaviour {
 
 	static public LittleMacController LittleMac;
 
+
 	/*Set in inspector*/
 	public float distanceX;
 	public float distanceY;
@@ -53,6 +54,7 @@ public class LittleMacController : MonoBehaviour {
 			/*Right Face Punch*/
 			if(Input.GetKeyDown(KeyCode.X)){
 				animatorScript.PunchRightFace();
+				vonKaiserHeadHit();
 				return;
 			}
 			if(Input.GetKeyDown(KeyCode.Period)){
@@ -62,6 +64,7 @@ public class LittleMacController : MonoBehaviour {
 			/*Left Punch Face*/
 			if(Input.GetKeyDown(KeyCode.Z)){
 				animatorScript.PunchLeftFace();
+				vonKaiserHeadHit();
 				return;
 			}
 			if(Input.GetKeyDown (KeyCode.Comma)){
@@ -93,7 +96,7 @@ public class LittleMacController : MonoBehaviour {
 		/*Directional Inputs*/
 
 		/*If down key (or S) is held down, should stay in shield position*/
-		if(Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S)){
+		if(Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)){
 			if(Time.time-animatorScript.animator.GetFloat("shieldTime")<tapSpeed){
 				animatorScript.Duck();
 				animatorScript.animator.SetFloat("shieldTime",0);
@@ -136,4 +139,11 @@ public class LittleMacController : MonoBehaviour {
 	bool IsAnimationActionPlaying(){
 		return !animatorScript.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Idle");
 	}
+
+	void vonKaiserHeadHit() {
+		if (VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Sucker Face") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Punch Retreat")) {					
+			VonKaiserController.VonKaiser.headHit ();
+		}
+	}
+
 }
