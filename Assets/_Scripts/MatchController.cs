@@ -33,18 +33,6 @@ public class MatchController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-
-//		if (LittleMac.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Punch Left Normal")) {
-////			print ("called delayAnimation");
-//
-//			VonKaiser.bodyBlock ();
-//
-////			if (canCallDelay) {
-////				delayAnimation (5.16f);	
-////				VonKaiser.punch ();
-////			}
-//		}
-
 		if (!audio.isPlaying) {
 			if(firstTime==false){ 
 				audio.clip=FightMusic;
@@ -54,14 +42,5 @@ public class MatchController : MonoBehaviour {
 			}
 		}
 	}
-
-//
-//	IEnumerator delayAnimation (float seconds) {
-//		canCallDelay = false;
-//		print ("got to yield");
-//		yield return new WaitForSeconds(seconds);
-//		print ("got to punch");
-//		canCallDelay = true;
-//	}
 
 }

@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class VonKaiserController : MonoBehaviour {
-
+	
 	public static VonKaiserController VonKaiserC;
 
 	public static VonKaiserAnimator VonKaiser;
@@ -19,15 +19,16 @@ public class VonKaiserController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		this.GetComponent<VonKaiserAnimator> ().intro();
 		VonKaiser = VonKaiserAnimator.VonKaiserA;
 		LittleMac = LittleMacAnimator.LittleMacA;
+		VonKaiser.intro ();
+		VonKaiser.animator.SetInteger ("Health", 100); // set initial health to 100
 	}
 
 	//Punches for testing
 	void FixedUpdate () {
 		++numUpdates;
-		if (numUpdates % 100 == 0) {
+		if (numUpdates % 300 == 0) {
 			VonKaiser.punch();
 		}
 	}
@@ -38,6 +39,14 @@ public class VonKaiserController : MonoBehaviour {
 		LittleMacInfo = LittleMac.animator.GetCurrentAnimatorStateInfo (0);
 		VonKaiserInfo = VonKaiser.animator.GetCurrentAnimatorStateInfo (0);
 
+		if (VonKaiserInfo.IsName("Von Kaiser Idle")) {
+			VonKaiser.animator.SetInteger("Num Head Hits", 0);
+		}
+
+		if (VonKaiserInfo.IsName("Von Kaiser Get Up Right") || VonKaiserInfo.IsName("Von Kaiser Get Up Left")) {
+			VonKaiser.animator.SetInteger("Health", 100);
+		}
+	
 		// possibly put these in Little Mac Controller so that they only happen once the key is pressed? -- THIS MAY HAVE BEEN RIGHT... DO STATIC STUFF AND DONT FORGET TO RE ADD THE PUBLICS IN THE INSPECTOR
 		if ((LittleMacInfo.IsName("Little Mac Punch Left Normal") || LittleMacInfo.IsName("Little Mac Punch Right Normal")) && VonKaiserInfo.IsName("Von Kaiser Idle")) {
 			VonKaiser.bodyBlock ();

@@ -24,7 +24,7 @@ public class LittleMacController : MonoBehaviour {
 	private LittleMacAnimator animatorScript;
 
 	void Awake(){
-
+		LittleMac = this;
 	}
 	
 	// Use this for initialization
@@ -54,7 +54,7 @@ public class LittleMacController : MonoBehaviour {
 			/*Right Face Punch*/
 			if(Input.GetKeyDown(KeyCode.X)){
 				animatorScript.PunchRightFace();
-				vonKaiserHeadHit();
+				vonKaiserRightHeadHit();
 				return;
 			}
 			if(Input.GetKeyDown(KeyCode.Period)){
@@ -64,7 +64,7 @@ public class LittleMacController : MonoBehaviour {
 			/*Left Punch Face*/
 			if(Input.GetKeyDown(KeyCode.Z)){
 				animatorScript.PunchLeftFace();
-				vonKaiserHeadHit();
+				vonKaiserLeftHeadHit();
 				return;
 			}
 			if(Input.GetKeyDown (KeyCode.Comma)){
@@ -140,9 +140,15 @@ public class LittleMacController : MonoBehaviour {
 		return !animatorScript.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Idle");
 	}
 
-	void vonKaiserHeadHit() {
+	void vonKaiserLeftHeadHit() {
 		if (VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Sucker Face") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Punch Retreat")) {					
-			VonKaiserController.VonKaiser.headHit ();
+			VonKaiserController.VonKaiser.leftHeadHit ();
+		}
+	}
+
+	void vonKaiserRightHeadHit() {
+		if (VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Sucker Face") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Punch Retreat")) {					
+			VonKaiserController.VonKaiser.rightHeadHit ();
 		}
 	}
 

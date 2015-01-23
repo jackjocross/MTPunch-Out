@@ -30,13 +30,13 @@ public class VonKaiserAnimator : MonoBehaviour {
 		animator.SetTrigger ("Head Block");
 	}
 
-	public void headHit() {
-//		if (animator.GetCurrentAnimatorStateInfo(0).IsName ("Von Kaiser Head Hit") || 
-//		    animator.GetCurrentAnimatorStateInfo(0).IsName ("Von Kaiser Large Head Hit")) {
-//			return;
-//		}
+	public void leftHeadHit() {
 
-		animator.SetTrigger ("Head Hit");
+		int curHealth = animator.GetInteger ("Health");
+		curHealth -= 10;
+		animator.SetInteger ("Health", curHealth);
+
+		animator.SetTrigger ("Head Hit Left");
 
 		int numHeadHits = animator.GetInteger ("Num Head Hits");
 		if (numHeadHits == 6) {
@@ -46,6 +46,24 @@ public class VonKaiserAnimator : MonoBehaviour {
 			animator.SetInteger ("Num Head Hits", ++numHeadHits);
 		}
 
+	}
+
+	public void rightHeadHit() {
+
+		int curHealth = animator.GetInteger ("Health");
+		curHealth -= 10;
+		animator.SetInteger ("Health", curHealth);
+
+		animator.SetTrigger ("Head Hit Right");
+
+		int numHeadHits = animator.GetInteger ("Num Head Hits");
+		if (numHeadHits == 6) {
+			animator.SetInteger ("Num Head Hits", 0);
+		}
+		else {
+			animator.SetInteger ("Num Head Hits", ++numHeadHits);
+		}
+		
 	}
 
 	// Use this for initialization
