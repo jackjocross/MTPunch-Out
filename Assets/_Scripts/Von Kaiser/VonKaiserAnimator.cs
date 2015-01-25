@@ -6,6 +6,7 @@ public class VonKaiserAnimator : MonoBehaviour {
 	public static VonKaiserAnimator VonKaiserA;
 
 	public Animator animator;
+	public Animator marioAnimator;
 
 	void Awake() {
 		VonKaiserA = this;
@@ -32,38 +33,75 @@ public class VonKaiserAnimator : MonoBehaviour {
 
 	public void leftHeadHit() {
 
-		int curHealth = animator.GetInteger ("Health");
-		curHealth -= 10;
-		animator.SetInteger ("Health", curHealth);
+		VonKaiserController.health -= 10;
+		VonKaiserController.VonKaiserHealth.fillAmount -= 0.1f;
+		++VonKaiserController.numHeadHits;
 
-		animator.SetTrigger ("Head Hit Left");
+		if (VonKaiserController.health <= 0) {
+			animator.SetTrigger("Knockdown Left");
+			marioAnimator.SetTrigger ("Enter");
+			VonKaiserController.health = 100;
+			VonKaiserController.VonKaiserHealth.fillAmount = 1f;
 
-		int numHeadHits = animator.GetInteger ("Num Head Hits");
-		if (numHeadHits == 6) {
-			animator.SetInteger ("Num Head Hits", 0);
+		}
+		else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Sucker Face") && VonKaiserController.numHeadHits > 5) {
+			animator.SetTrigger ("Large Head Hit Left");
+			VonKaiserController.numHeadHits = 0;
 		}
 		else {
-			animator.SetInteger ("Num Head Hits", ++numHeadHits);
+			animator.SetTrigger ("Head Hit Left");
 		}
-
 	}
 
 	public void rightHeadHit() {
 
-		int curHealth = animator.GetInteger ("Health");
-		curHealth -= 10;
-		animator.SetInteger ("Health", curHealth);
+		VonKaiserController.health -= 10;
+		VonKaiserController.VonKaiserHealth.fillAmount -= 0.1f;
+		++VonKaiserController.numHeadHits;
 
-		animator.SetTrigger ("Head Hit Right");
-
-		int numHeadHits = animator.GetInteger ("Num Head Hits");
-		if (numHeadHits == 6) {
-			animator.SetInteger ("Num Head Hits", 0);
+		if (VonKaiserController.health <= 0) {
+			animator.SetTrigger("Knockdown Right");
+			marioAnimator.SetTrigger ("Enter");
+			VonKaiserController.health = 100;
+			VonKaiserController.VonKaiserHealth.fillAmount = 1f;
+		}
+		else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Sucker Face") && VonKaiserController.numHeadHits > 5) {
+			animator.SetTrigger ("Large Head Hit Right");
+			VonKaiserController.numHeadHits = 0;
 		}
 		else {
-			animator.SetInteger ("Num Head Hits", ++numHeadHits);
+			animator.SetTrigger ("Head Hit Right");
 		}
+	}
+
+	public void leftBodyHit() {
+		VonKaiserController.health -= 10;
+		VonKaiserController.VonKaiserHealth.fillAmount -= 0.1f;
+
+		if (VonKaiserController.health <= 0) {
+			animator.SetTrigger("Knockdown Left");
+			marioAnimator.SetTrigger ("Enter");
+			VonKaiserController.health = 100;
+			VonKaiserController.VonKaiserHealth.fillAmount = 1f;
+		}
+		else {
+			animator.SetTrigger ("Body Hit");
+		}
+	}
+
+	public void rightBodyHit() {
+		VonKaiserController.health -= 10;
+		VonKaiserController.VonKaiserHealth.fillAmount -= 0.1f;
 		
+		if (VonKaiserController.health <= 0) {
+			animator.SetTrigger("Knockdown Right");
+			marioAnimator.SetTrigger ("Enter");
+			VonKaiserController.health = 100;
+			VonKaiserController.VonKaiserHealth.fillAmount = 1f;
+		}
+		else {
+			animator.SetTrigger ("Body Hit");
+		}
 	}
 
 	// Use this for initialization

@@ -124,11 +124,12 @@ public class LittleMacController : MonoBehaviour {
 		/*A Button*/
 		if (Input.GetKeyDown (KeyCode.X) || Input.GetKeyDown (KeyCode.Period)) {
 			animatorScript.PunchRightNormal();
+			vonKaiserRightBodyHit();
 		}
 		/*B Button*/
 		if (Input.GetKeyDown (KeyCode.Z) || Input.GetKeyDown (KeyCode.Comma)) {
-
 			animatorScript.PunchLeftNormal();
+			vonKaiserRightBodyHit();
 		}
 		/*Select*/
 		if(Input.GetKeyDown(KeyCode.Tab)){
@@ -141,15 +142,28 @@ public class LittleMacController : MonoBehaviour {
 	}
 
 	void vonKaiserLeftHeadHit() {
-		if (VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Sucker Face") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Punch Retreat")) {					
+		if (VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Sucker Face") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Punch Retreat") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Upper Hang")) {					
 			VonKaiserController.VonKaiser.leftHeadHit ();
 		}
 	}
 
 	void vonKaiserRightHeadHit() {
-		if (VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Sucker Face") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Punch Retreat")) {					
+		if (VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Sucker Face") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Punch Retreat") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Upper Hang")) {					
 			VonKaiserController.VonKaiser.rightHeadHit ();
 		}
 	}
+
+	void vonKaiserLeftBodyHit() {
+		if (VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Upper Hang") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Sucker Face 0")) {					
+			VonKaiserController.VonKaiser.leftBodyHit ();
+		}
+	}
+
+	void vonKaiserRightBodyHit() {
+		if (VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Upper Hang") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Sucker Face 0")) {					
+			VonKaiserController.VonKaiser.rightBodyHit ();
+		}
+	}
+
 
 }

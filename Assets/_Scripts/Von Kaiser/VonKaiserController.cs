@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class VonKaiserController : MonoBehaviour {
 	
@@ -11,26 +12,32 @@ public class VonKaiserController : MonoBehaviour {
 	public static AnimatorStateInfo LittleMacInfo;
 	public static AnimatorStateInfo VonKaiserInfo;
 
+	public static Image VonKaiserHealth;
+	
+	public static int health;
+	public static int numHeadHits;
+
 	private int numUpdates = 0;
 
 	void Awake() {
 		VonKaiserC = this;
+		health = 100;
 	}
 
 	// Use this for initialization
 	void Start () {
 		VonKaiser = VonKaiserAnimator.VonKaiserA;
 		LittleMac = LittleMacAnimator.LittleMacA;
+		VonKaiserHealth = GameObject.Find ("Von Kaiser Health").GetComponent<Image>();
 		VonKaiser.intro ();
-		VonKaiser.animator.SetInteger ("Health", 100); // set initial health to 100
 	}
 
 	//Punches for testing
 	void FixedUpdate () {
-		++numUpdates;
-		if (numUpdates % 300 == 0) {
-			VonKaiser.punch();
-		}
+//		++numUpdates;
+//		if (numUpdates % 300 == 0) {
+//			VonKaiser.punch();
+//		}
 	}
 
 	// Update is called once per frame
@@ -39,14 +46,6 @@ public class VonKaiserController : MonoBehaviour {
 		LittleMacInfo = LittleMac.animator.GetCurrentAnimatorStateInfo (0);
 		VonKaiserInfo = VonKaiser.animator.GetCurrentAnimatorStateInfo (0);
 
-		if (VonKaiserInfo.IsName("Von Kaiser Idle")) {
-			VonKaiser.animator.SetInteger("Num Head Hits", 0);
-		}
-
-		if (VonKaiserInfo.IsName("Von Kaiser Get Up Right") || VonKaiserInfo.IsName("Von Kaiser Get Up Left")) {
-			VonKaiser.animator.SetInteger("Health", 100);
-		}
-	
 		// possibly put these in Little Mac Controller so that they only happen once the key is pressed? -- THIS MAY HAVE BEEN RIGHT... DO STATIC STUFF AND DONT FORGET TO RE ADD THE PUBLICS IN THE INSPECTOR
 		if ((LittleMacInfo.IsName("Little Mac Punch Left Normal") || LittleMacInfo.IsName("Little Mac Punch Right Normal")) && VonKaiserInfo.IsName("Von Kaiser Idle")) {
 			VonKaiser.bodyBlock ();
@@ -57,12 +56,6 @@ public class VonKaiserController : MonoBehaviour {
 		else if ((LittleMacInfo.IsName("Little Mac Punch Left Normal") || LittleMacInfo.IsName("Little Mac Punch Right Normal")) && VonKaiserInfo.IsName("Von Kaiser Punch")) {
 			VonKaiser.bodyBlock ();
 		}
-//		else if ((LittleMacInfo.IsName("Little Mac Punch Left Face") || LittleMacInfo.IsName("Little Mac Punch Right Face")) && VonKaiserInfo.IsName("Von Kaiser Punch")) {
-//			VonKaiser.headHit ();
-//		}
-//		else if ((LittleMacInfo.IsName("Little Mac Punch Left Face") || LittleMacInfo.IsName("Little Mac Punch Right Face")) && VonKaiserInfo.IsName("Von Kaiser Sucker Face")) {
-//			VonKaiser.headHit ();
-//		}
 	}
 	
 }
