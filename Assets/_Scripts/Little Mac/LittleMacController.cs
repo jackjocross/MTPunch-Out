@@ -4,22 +4,11 @@ using System.Collections.Generic;
 
 public class LittleMacController : MonoBehaviour {
 
-	static public LittleMacController LittleMac;
+	public static LittleMacController LittleMac;
 
 
 	/*Set in inspector*/
-	public float distanceX;
-	public float distanceY;
 	public float tapSpeed;
-
-	float minX;
-	float maxX;
-	float maxY;
-
-	float originalX;
-	float originalY;
-	float previousX;
-	float previousY;
 
 	private LittleMacAnimator animatorScript;
 
@@ -30,25 +19,11 @@ public class LittleMacController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		animatorScript=this.GetComponent<LittleMacAnimator>();
-
-		minX=transform.position.x-distanceX;
-		maxX=transform.position.x+distanceX;
-		originalX = transform.position.x;
-		previousX = originalX;
-
-		maxY = transform.position.y + distanceY;
-		originalY = transform.position.y;
-		previousY = originalY;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//print(this.transform.position.x);
 
-		if(IsAnimationActionPlaying()){
-//				print ("idle state");
-				return;
-		}
 		/*GetKeyDown only returns selection for one frame so need to check GetKey to check if key is held down*/
 		if (Input.GetKey (KeyCode.UpArrow)) {
 			/*Right Face Punch*/
