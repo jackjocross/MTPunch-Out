@@ -2,7 +2,15 @@ fileFormatVersion: 2
 guid: 06c19fa37188245fc8ab41dab66117b0
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - VonKaiserIntroduction: {fileID: 8300000, guid: e1cf78771cb114662938915b3c0af3a5,
+      type: 3}
+  - FightMusic: {fileID: 8300000, guid: c5c5488afb194436abe6e797b097bc72, type: 3}
+  - Bell: {fileID: 8300000, guid: dd598b71df3b745eeaa2754eba645c7a, type: 3}
+  - VonKaiser: {instanceID: 0}
+  - LittleMac: {instanceID: 0}
+  - clock: {instanceID: 0}
+  - mario: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
