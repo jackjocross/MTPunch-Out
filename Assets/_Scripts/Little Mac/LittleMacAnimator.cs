@@ -33,7 +33,10 @@ public class LittleMacAnimator : MonoBehaviour {
 
 		if (LittleMacStateInfo.IsName ("Little Mac Idle")) {
 			//If Von Kaiser at at climax of left punch, Little Mac gets hit
-			if(VonKaiserStateInfo.IsName ("Von Kaiser Punch")){
+			if(VonKaiserStateInfo.IsName ("Von Kaiser Punch Climax")){
+				animator.SetTrigger("Punched By Left");
+			}
+			else if(VonKaiserStateInfo.IsName("Von Kaiser Upper Climax") || VonKaiserStateInfo.IsName("Von Kaiser Upper Climax 0")){
 				animator.SetTrigger("Punched By Left");
 			}
 		}

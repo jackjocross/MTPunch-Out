@@ -6,8 +6,7 @@ public class VonKaiserController : MonoBehaviour {
 	
 	public static VonKaiserController VonKaiserC;
 
-	public static VonKaiserAnimator VonKaiser;
-	public static LittleMacAnimator LittleMac;
+	//public static LittleMacAnimator LittleMac;
 
 	public static AnimatorStateInfo LittleMacInfo;
 	public static AnimatorStateInfo VonKaiserInfo;
@@ -15,9 +14,6 @@ public class VonKaiserController : MonoBehaviour {
 	public static Image VonKaiserHealth;
 	
 	public static int health;
-	public static int numHeadHits;
-
-	private int numUpdates = 0;
 
 	void Awake() {
 		VonKaiserC = this;
@@ -26,35 +22,77 @@ public class VonKaiserController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		VonKaiser = VonKaiserAnimator.VonKaiserA;
-		LittleMac = LittleMacAnimator.LittleMacA;
 		VonKaiserHealth = GameObject.Find ("Von Kaiser Health").GetComponent<Image>();
-		VonKaiser.intro ();
-	}
-
-	//Punches for testing
-	void FixedUpdate () {
-//		++numUpdates;
-//		if (numUpdates % 300 == 0) {
-//			VonKaiser.punch();
-//		}
+		VonKaiserAnimator.VonKaiserA.intro ();
 	}
 
 	// Update is called once per frame
 	void Update() {
 
-		LittleMacInfo = LittleMac.animator.GetCurrentAnimatorStateInfo (0);
-		VonKaiserInfo = VonKaiser.animator.GetCurrentAnimatorStateInfo (0);
+		LittleMacInfo = LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo (0);
+		VonKaiserInfo = VonKaiserAnimator.VonKaiserA.animator.GetCurrentAnimatorStateInfo (0);
 
-		// possibly put these in Little Mac Controller so that they only happen once the key is pressed? -- THIS MAY HAVE BEEN RIGHT... DO STATIC STUFF AND DONT FORGET TO RE ADD THE PUBLICS IN THE INSPECTOR
-		if ((LittleMacInfo.IsName("Little Mac Punch Left Normal") || LittleMacInfo.IsName("Little Mac Punch Right Normal")) && VonKaiserInfo.IsName("Von Kaiser Idle")) {
-			VonKaiser.bodyBlock ();
-		} 
-		else if ((LittleMacInfo.IsName("Little Mac Punch Left Face") || LittleMacInfo.IsName("Little Mac Punch Right Face")) && VonKaiserInfo.IsName("Von Kaiser Idle")) {
-			VonKaiser.headBlock();
+
+		// logic for when von kaiser can be hit / block
+		if (VonKaiserInfo.IsName("Von Kaiser Idle") || VonKaiserInfo.IsName("Von Kaiser Idle 0") || VonKaiserInfo.IsName("Von Kaiser Idle 0 0")) {
+			VonKaiserAnimator.curPunchState = (int)VonKaiserAnimator.punchStates.Notset;
+			VonKaiserAnimator.VonKaiserA.consecutiveHits = 0;
+			print ("setting punch state to notset");
 		}
-		else if ((LittleMacInfo.IsName("Little Mac Punch Left Normal") || LittleMacInfo.IsName("Little Mac Punch Right Normal")) && VonKaiserInfo.IsName("Von Kaiser Punch")) {
-			VonKaiser.bodyBlock ();
+		if ((LittleMacInfo.IsName("Little Mac Punch Left Normal Climax") || LittleMacInfo.IsName("Little Mac Punch Right Normal Climax")) && VonKaiserInfo.IsName("Von Kaiser Idle")) {
+			VonKaiserAnimator.VonKaiserA.bodyBlock ();
+		} 
+		else if ((LittleMacInfo.IsName("Little Mac Punch Left Face Climax") || LittleMacInfo.IsName("Little Mac Punch Right Face Climax")) && VonKaiserInfo.IsName("Von Kaiser Idle")) {
+			VonKaiserAnimator.VonKaiserA.headBlock();
+		}
+		else if ((LittleMacInfo.IsName("Little Mac Punch Left Normal Climax") || LittleMacInfo.IsName("Little Mac Punch Right Normal Climax")) && VonKaiserInfo.IsName("Von Kaiser Punch")) {
+			VonKaiserAnimator.VonKaiserA.bodyBlock ();
+		}
+		else if (LittleMacInfo.IsName("Little Mac Punch Left Face Climax") && VonKaiserInfo.IsName("Von Kaiser Punch Retreat")) {
+			VonKaiserAnimator.VonKaiserA.leftHeadHit();
+		}
+		else if (LittleMacInfo.IsName("Little Mac Punch Right Face Climax") && VonKaiserInfo.IsName("Von Kaiser Punch Retreat")) {
+			VonKaiserAnimator.VonKaiserA.rightHeadHit();
+		}
+		else if (LittleMacInfo.IsName("Little Mac Punch Left Face Climax") && VonKaiserInfo.IsName("Von Kaiser Sucker Face")) {
+			VonKaiserAnimator.VonKaiserA.leftHeadHit();
+		}
+		else if (LittleMacInfo.IsName("Little Mac Punch Right Face Climax") && VonKaiserInfo.IsName("Von Kaiser Sucker Face")) {
+			VonKaiserAnimator.VonKaiserA.rightHeadHit();
+		}
+		else if (LittleMacInfo.IsName("Little Mac Punch Left Normal Climax") && VonKaiserInfo.IsName("Von Kaiser Sucker Face")) {
+			VonKaiserAnimator.VonKaiserA.leftBodyHit();
+		}
+		else if (LittleMacInfo.IsName("Little Mac Punch Right Normal Climax") && VonKaiserInfo.IsName("Von Kaiser Sucker Face")) {
+			VonKaiserAnimator.VonKaiserA.rightBodyHit();
+		}
+		else if (LittleMacInfo.IsName("Little Mac Punch Left Face Climax") && VonKaiserInfo.IsName("Von Kaiser Upper Hang")) {
+			VonKaiserAnimator.VonKaiserA.leftHeadHit();
+		}
+		else if (LittleMacInfo.IsName("Little Mac Punch Right Face Climax") && VonKaiserInfo.IsName("Von Kaiser Upper Hang")) {
+			VonKaiserAnimator.VonKaiserA.rightHeadHit();
+		}
+		else if (LittleMacInfo.IsName("Little Mac Punch Left Face Climax") && VonKaiserInfo.IsName("Von Kaiser Upper Hang 0")) {
+			VonKaiserAnimator.VonKaiserA.leftHeadHit();
+		}
+		else if (LittleMacInfo.IsName("Little Mac Punch Right Face Climax") && VonKaiserInfo.IsName("Von Kaiser Upper Hang 0")) {
+			VonKaiserAnimator.VonKaiserA.rightHeadHit();
+		}
+		else if (LittleMacInfo.IsName("Little Mac Punch Left Normal Climax") && VonKaiserInfo.IsName("Von Kaiser Upper Hang")) {
+			print ("body punch successful");
+			VonKaiserAnimator.VonKaiserA.leftBodyHit();
+		}
+		else if (LittleMacInfo.IsName("Little Mac Punch Right Normal Climax") && VonKaiserInfo.IsName("Von Kaiser Upper Hang")) {
+			print ("body punch successful");
+			VonKaiserAnimator.VonKaiserA.rightBodyHit();
+		}
+		else if (LittleMacInfo.IsName("Little Mac Punch Left Normal Climax") && VonKaiserInfo.IsName("Von Kaiser Upper Hang 0")) {
+			print ("body punch successful");
+			VonKaiserAnimator.VonKaiserA.leftBodyHit();
+		}
+		else if (LittleMacInfo.IsName("Little Mac Punch Right Normal Climax") && VonKaiserInfo.IsName("Von Kaiser Upper Hang 0")) {
+			print ("body punch successful");
+			VonKaiserAnimator.VonKaiserA.rightBodyHit();
 		}
 	}
 	
