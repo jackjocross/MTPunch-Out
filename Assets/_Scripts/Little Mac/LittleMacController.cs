@@ -33,7 +33,6 @@ public class LittleMacController : MonoBehaviour {
 			/*Right Face Punch*/
 			if(Input.GetKeyDown(KeyCode.X)){
 				animatorScript.PunchRightFace();
-				vonKaiserRightHeadHit();
 				return;
 			}
 			if(Input.GetKeyDown(KeyCode.Period)){
@@ -43,7 +42,6 @@ public class LittleMacController : MonoBehaviour {
 			/*Left Punch Face*/
 			if(Input.GetKeyDown(KeyCode.Z)){
 				animatorScript.PunchLeftFace();
-				vonKaiserLeftHeadHit();
 				return;
 			}
 			if(Input.GetKeyDown (KeyCode.Comma)){
@@ -103,12 +101,10 @@ public class LittleMacController : MonoBehaviour {
 		/*A Button*/
 		if (Input.GetKeyDown (KeyCode.X) || Input.GetKeyDown (KeyCode.Period)) {
 			animatorScript.PunchRightNormal();
-			vonKaiserRightBodyHit();
 		}
 		/*B Button*/
 		if (Input.GetKeyDown (KeyCode.Z) || Input.GetKeyDown (KeyCode.Comma)) {
 			animatorScript.PunchLeftNormal();
-			vonKaiserLeftBodyHit();
 		}
 		/*Select*/
 		if(Input.GetKeyDown(KeyCode.Tab)){
@@ -120,29 +116,6 @@ public class LittleMacController : MonoBehaviour {
 		return !animatorScript.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Idle");
 	}
 
-	void vonKaiserLeftHeadHit() {
-		if (VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Sucker Face") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Punch Retreat") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Upper Hang")) {					
-			VonKaiserController.VonKaiser.leftHeadHit ();
-		}
-	}
-
-	void vonKaiserRightHeadHit() {
-		if (VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Sucker Face") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Punch Retreat") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Upper Hang")) {					
-			VonKaiserController.VonKaiser.rightHeadHit ();
-		}
-	}
-
-	void vonKaiserLeftBodyHit() {
-		if (VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Upper Hang") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Sucker Face 0")) {					
-			VonKaiserController.VonKaiser.leftBodyHit ();
-		}
-	}
-
-	void vonKaiserRightBodyHit() {
-		if (VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Upper Hang") || VonKaiserController.VonKaiserInfo.IsName("Von Kaiser Sucker Face 0")) {					
-			VonKaiserController.VonKaiser.rightBodyHit ();
-		}
-	}
 
 
 }

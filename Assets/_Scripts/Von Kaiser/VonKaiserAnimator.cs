@@ -8,8 +8,14 @@ public class VonKaiserAnimator : MonoBehaviour {
 	public Animator animator;
 	public Animator marioAnimator;
 
+	public enum punchStates {Head, Body, Notset};
+	public static int curPunchState;
+
+	public int consecutiveHits = 0;
+
 	void Awake() {
 		VonKaiserA = this;
+		curPunchState = (int)punchStates.Notset;
 	}
 
 	public void intro() {
@@ -33,23 +39,32 @@ public class VonKaiserAnimator : MonoBehaviour {
 
 	public void leftHeadHit() {
 
+		if (curPunchState == (int)punchStates.Body) {
+			animator.SetTrigger("Head Block");
+			return;
+		}
+		else {
+			curPunchState = (int)punchStates.Head;
+			print ("setting punch state to head");
+		}
+
 		VonKaiserController.health -= 10;
+		print (VonKaiserController.health);
 		VonKaiserController.VonKaiserHealth.fillAmount -= 0.1f;
-		++VonKaiserController.numHeadHits;
+		++consecutiveHits;
 
 		if (VonKaiserController.health <= 0) {
 			animator.SetTrigger("Knockdown Left");
 			/*Little Mac retreats while Mario counts down*/
 			LittleMacController.LittleMac.animatorScript.animator.SetBool("Retreat",true);
-			print (LittleMacController.LittleMac.animatorScript.animator.GetBool("Retreat"));
-			//marioAnimator.SetTrigger ("Enter");
+			marioAnimator.SetTrigger ("Enter");
 			VonKaiserController.health = 100;
 			VonKaiserController.VonKaiserHealth.fillAmount = 1f;
 
 		}
-		else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Sucker Face") && VonKaiserController.numHeadHits > 5) {
+		else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Sucker Face") && consecutiveHits > 5) {
 			animator.SetTrigger ("Large Head Hit Left");
-			VonKaiserController.numHeadHits = 0;
+			consecutiveHits = 0;
 		}
 		else {
 			animator.SetTrigger ("Head Hit Left");
@@ -58,9 +73,19 @@ public class VonKaiserAnimator : MonoBehaviour {
 
 	public void rightHeadHit() {
 
+		if (curPunchState == (int)punchStates.Body) {
+			animator.SetTrigger("Head Block");
+			return;
+		}
+		else {
+			curPunchState = (int)punchStates.Head;
+			print ("setting punch state to head");
+		}
+
 		VonKaiserController.health -= 10;
+		print (VonKaiserController.health);
 		VonKaiserController.VonKaiserHealth.fillAmount -= 0.1f;
-		++VonKaiserController.numHeadHits;
+		++consecutiveHits;
 
 		if (VonKaiserController.health <= 0) {
 			animator.SetTrigger("Knockdown Right");
@@ -68,9 +93,9 @@ public class VonKaiserAnimator : MonoBehaviour {
 			VonKaiserController.health = 100;
 			VonKaiserController.VonKaiserHealth.fillAmount = 1f;
 		}
-		else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Sucker Face") && VonKaiserController.numHeadHits > 5) {
+		else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Sucker Face") && consecutiveHits > 5) {
 			animator.SetTrigger ("Large Head Hit Right");
-			VonKaiserController.numHeadHits = 0;
+			consecutiveHits = 0;
 		}
 		else {
 			animator.SetTrigger ("Head Hit Right");
@@ -78,8 +103,20 @@ public class VonKaiserAnimator : MonoBehaviour {
 	}
 
 	public void leftBodyHit() {
+		if (curPunchState == (int)punchStates.Head) {
+			animator.SetTrigger("Body Block");
+			print ("punch state is head!");
+			return;
+		}
+		else {
+			curPunchState = (int)punchStates.Body;
+			print ("setting punch state to body");
+
+		}
+
 		VonKaiserController.health -= 10;
 		VonKaiserController.VonKaiserHealth.fillAmount -= 0.1f;
+		++consecutiveHits;
 
 		if (VonKaiserController.health <= 0) {
 			animator.SetTrigger("Knockdown Left");
@@ -87,20 +124,40 @@ public class VonKaiserAnimator : MonoBehaviour {
 			VonKaiserController.health = 100;
 			VonKaiserController.VonKaiserHealth.fillAmount = 1f;
 		}
+		else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Sucker Face") && consecutiveHits > 5) {
+			animator.SetTrigger ("Large Head Hit Right");
+			consecutiveHits = 0;
+		}
 		else {
 			animator.SetTrigger ("Body Hit");
 		}
 	}
 
 	public void rightBodyHit() {
+		if (curPunchState == (int)punchStates.Head) {
+			animator.SetTrigger("Body Block");
+			print ("punch state is head!");
+			return;
+		}
+		else {
+			curPunchState = (int)punchStates.Body;
+			print ("setting punch state to body");
+
+		}
+
 		VonKaiserController.health -= 10;
 		VonKaiserController.VonKaiserHealth.fillAmount -= 0.1f;
+		++consecutiveHits;
 		
 		if (VonKaiserController.health <= 0) {
 			animator.SetTrigger("Knockdown Right");
 			marioAnimator.SetTrigger ("Enter");
 			VonKaiserController.health = 100;
 			VonKaiserController.VonKaiserHealth.fillAmount = 1f;
+		}
+		else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Sucker Face") && consecutiveHits > 5) {
+			animator.SetTrigger ("Large Head Hit Right");
+			consecutiveHits = 0;
 		}
 		else {
 			animator.SetTrigger ("Body Hit");

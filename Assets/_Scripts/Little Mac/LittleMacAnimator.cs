@@ -34,6 +34,7 @@ public class LittleMacAnimator : MonoBehaviour {
 		/*If Little Mac is idle, check if he's getting punched*/
 		if (LittleMacStateInfo.IsName ("Little Mac Idle")) {
 			//If Von Kaiser at at climax of left punch, Little Mac gets hit
+
 			if(VonKaiserStateInfo.IsName ("Von Kaiser Punch Climax")){
 				animator.SetTrigger("Punched By Left");
 				LittleMacController.LittleMac.health-=10;
@@ -43,7 +44,7 @@ public class LittleMacAnimator : MonoBehaviour {
 				}
 				MatchController.Match.lifeScript.removeLife(3);
 			}
-			if(VonKaiserStateInfo.IsName("Von Kaiser Upper Climax")){
+			if(VonKaiserStateInfo.IsName("Von Kaiser Upper Climax") || VonKaiserStateInfo.IsName("Von Kaiser Upper Climax 0")){
 				animator.SetTrigger("Punched By Right");
 				LittleMacController.LittleMac.health-=20;
 				if(LittleMacController.LittleMac.LittleMacHealth.fillAmount-.2f<0){
