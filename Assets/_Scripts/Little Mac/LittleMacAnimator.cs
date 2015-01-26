@@ -31,37 +31,72 @@ public class LittleMacAnimator : MonoBehaviour {
 		AnimatorStateInfo LittleMacStateInfo=animator.GetCurrentAnimatorStateInfo(0);
 		AnimatorStateInfo VonKaiserStateInfo = VonKaiserController.VonKaiserInfo;
 
+		/*If Little Mac is idle, check if he's getting punched*/
 		if (LittleMacStateInfo.IsName ("Little Mac Idle")) {
 			//If Von Kaiser at at climax of left punch, Little Mac gets hit
-			if(VonKaiserStateInfo.IsName ("Von Kaiser Punch")){
+			if(VonKaiserStateInfo.IsName ("Von Kaiser Punch Climax")){
 				animator.SetTrigger("Punched By Left");
+				LittleMacController.LittleMac.health-=10;
+				LittleMacController.LittleMac.LittleMacHealth.fillAmount-=.1f;
+				if(LittleMacController.LittleMac.LittleMacHealth.fillAmount==0f){
+					Falldown();
+				}
+				MatchController.Match.lifeScript.removeLife(3);
+			}
+			if(VonKaiserStateInfo.IsName("Von Kaiser Upper Climax")){
+				animator.SetTrigger("Punched By Right");
+				LittleMacController.LittleMac.health-=20;
+				if(LittleMacController.LittleMac.LittleMacHealth.fillAmount-.2f<0){
+					LittleMacController.LittleMac.LittleMacHealth.fillAmount=0f;
+					Falldown();
+				}
+				else{
+					LittleMacController.LittleMac.LittleMacHealth.fillAmount-=.2f;
+				}
+				MatchController.Match.lifeScript.removeLife(3);
 			}
 		}
 		if (LittleMacStateInfo.IsName ("Little Mac Punch Right Face Climax") || LittleMacStateInfo.IsName ("Little Mac Punch Left Face Climax")) {
-			source.clip=SuccessfulHeadPunch;
-			if(!source.isPlaying){
-				source.Play();
+			if(VonKaiserStateInfo.IsName("Von Kaiser Idle")){
+				source.clip=SuccessfulHeadPunch;
+				if(!source.isPlaying){
+					source.Play();
+				}
+				else{
+					source.Stop();
+					source.Play();
+				}
 			}
 			else{
-				source.Stop();
-				source.Play();
+				MatchController.Match.lifeScript.removeLife(1);
 			}
 		}
+
 		if (LittleMacStateInfo.IsName ("Little Mac Punch Left Normal Climax") || LittleMacStateInfo.IsName ("Little Mac Punch Right Normal Climax")) {
-			source.clip=SuccessfulAbPunch;
-			if(!source.isPlaying){
-				source.Play ();
+			if(VonKaiserStateInfo.IsName("Von Kaiser Idle")){
+				source.clip=SuccessfulAbPunch;
+				if(!source.isPlaying){
+					source.Play ();
+				}
+				else{
+					source.Stop();
+					source.Play ();
+				}
 			}
 			else{
-				source.Stop();
-				source.Play ();
+				MatchController.Match.lifeScript.removeLife(1);
 			}
 		}
+
 		if (LittleMacStateInfo.IsName ("Little Mac Shield")) {
 			/*If Little Mac has his shield and Von Kaiser punches, block it, and return to idle*/
-			if(VonKaiserStateInfo.IsName("Von Kaiser Punch")){
+			if(VonKaiserStateInfo.IsName("Von Kaiser Punch Retreat")){
 				animator.SetBool("Shield",false);
 			}
+		}
+
+		if (LittleMacStateInfo.IsName ("Little Mac Falldown")) {
+
 		}
 	}
 
@@ -111,5 +146,9 @@ public class LittleMacAnimator : MonoBehaviour {
 
 	public void Walk(){
 		animator.SetTrigger("Walk");
+	}
+
+	public void Falldown(){
+		animator.SetBool ("Falldown", true);
 	}
 }

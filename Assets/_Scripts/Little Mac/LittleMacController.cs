@@ -1,24 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class LittleMacController : MonoBehaviour {
 
 	public static LittleMacController LittleMac;
-
-
+	
 	/*Set in inspector*/
 	public float tapSpeed;
+	public int health;
+	public Image LittleMacHealth;
 
-	private LittleMacAnimator animatorScript;
+	public LittleMacAnimator animatorScript;
 
 	void Awake(){
 		LittleMac = this;
+		health=100;
 	}
 	
 	// Use this for initialization
 	void Start () {
 		animatorScript=this.GetComponent<LittleMacAnimator>();
+		LittleMacHealth=GameObject.Find("Little Mac Health").GetComponent<Image>();
 	}
 	
 	// Update is called once per frame
@@ -73,7 +77,7 @@ public class LittleMacController : MonoBehaviour {
 		/*If down key (or S) is held down, should stay in shield position*/
 		if(Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)){
 			if(Time.time-animatorScript.animator.GetFloat("shieldTime")<tapSpeed){
-				animatorScript.Duck();
+				//animatorScript.Duck();
 				animatorScript.animator.SetFloat("shieldTime",0);
 			}
 			else{

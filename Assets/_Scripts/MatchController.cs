@@ -2,24 +2,37 @@
 using System.Collections;
 
 public class MatchController : MonoBehaviour {
+	const int LIVES=20;
+
+	public static MatchController Match;
+
+	/*Audio Clips to be handle by match controller signaling end and beginning of round/match*/
 	public AudioClip VonKaiserIntroduction;
 	public AudioClip FightMusic;
 	public AudioClip Bell;
 
+	/*Scripts that we need access to*/
 	public VonKaiserAnimator VonKaiser;
 	public LittleMacAnimator LittleMac;
 	public ClockScript clock;
 	public GameObject mario;
+	public LifeScript lifeScript;
 
 	private int startTime = 0;
 //	private bool canCallDelay = true;
+	/*Bool to determine which music to play*/
 	private bool introduction;
 	private bool fightMusic;
+
+	void Awake(){
+		Match = this;
+	}
 
 	// Use this for initialization
 	void Start () {;
 		introduction = false;
 		fightMusic = false;
+		lifeScript.addLife(LIVES);
 		audio.clip = Bell;
 		audio.Play ();
 	}

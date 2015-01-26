@@ -10,7 +10,7 @@ public class LifeScript : MonoBehaviour {
 
 	private int numLives = 0;
 
-	void addLife(int life) {
+	public void addLife(int life) {
 		numLives += life;
 		int tempLives = numLives;
 
@@ -25,8 +25,8 @@ public class LifeScript : MonoBehaviour {
 
 	}
 
-	void removeLife() {
-		--numLives;
+	public void removeLife(int life) {
+		numLives -= life;
 		int tempLives = numLives;
 
 		lifeOnes.GetComponent<SpriteRenderer>().sprite = digits[tempLives % 10].GetComponent<SpriteRenderer>().sprite;

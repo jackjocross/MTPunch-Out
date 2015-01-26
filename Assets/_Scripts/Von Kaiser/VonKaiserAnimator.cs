@@ -39,7 +39,10 @@ public class VonKaiserAnimator : MonoBehaviour {
 
 		if (VonKaiserController.health <= 0) {
 			animator.SetTrigger("Knockdown Left");
-			marioAnimator.SetTrigger ("Enter");
+			/*Little Mac retreats while Mario counts down*/
+			LittleMacController.LittleMac.animatorScript.animator.SetBool("Retreat",true);
+			print (LittleMacController.LittleMac.animatorScript.animator.GetBool("Retreat"));
+			//marioAnimator.SetTrigger ("Enter");
 			VonKaiserController.health = 100;
 			VonKaiserController.VonKaiserHealth.fillAmount = 1f;
 
