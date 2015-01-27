@@ -6,13 +6,15 @@ public class LittleMacAnimator : MonoBehaviour {
 	public static LittleMacAnimator LittleMacA;
 
 	public Animator animator;
+	public AudioClip LittleMacDodge;
+	public AudioClip LitteMacStarPunchWindUp;
+	public AudioClip VonKaiserJabMiss;
+	public AudioClip VonKaiserUppercut;
+
 
 	private VonKaiserController VonKaiser;
 	private AudioSource source;
 
-	/*Audio Clips triggered by Little Mac*/
-	public AudioClip SuccessfulHeadPunch;
-	public AudioClip SuccessfulAbPunch;
 
 	void Awake(){
 		animator=GetComponent<Animator>();
@@ -39,53 +41,52 @@ public class LittleMacAnimator : MonoBehaviour {
 				animator.SetTrigger("Punched By Left");
 				LittleMacController.LittleMac.health-=10;
 				LittleMacController.LittleMac.LittleMacHealth.fillAmount-=.1f;
-				if(LittleMacController.LittleMac.LittleMacHealth.fillAmount==0f){
+				if(LittleMacController.LittleMac.LittleMacHealth.fillAmount<=0f){
 					Falldown();
 				}
-				MatchController.Match.lifeScript.removeLife(3);
+				if(MatchController.Match.lifeScript.numLives<3){
+					MatchController.Match.lifeScript.removeLife(MatchController.Match.lifeScript.numLives);
+				}
+				else{
+					MatchController.Match.lifeScript.removeLife(3);
+				}
 			}
 			if(VonKaiserStateInfo.IsName("Von Kaiser Upper Climax") || VonKaiserStateInfo.IsName("Von Kaiser Upper Climax 0")){
 				animator.SetTrigger("Punched By Right");
 				LittleMacController.LittleMac.health-=20;
-				if(LittleMacController.LittleMac.LittleMacHealth.fillAmount-.2f<0){
+				if(LittleMacController.LittleMac.LittleMacHealth.fillAmount-.2f<=0){
 					LittleMacController.LittleMac.LittleMacHealth.fillAmount=0f;
 					Falldown();
 				}
 				else{
 					LittleMacController.LittleMac.LittleMacHealth.fillAmount-=.2f;
 				}
-				MatchController.Match.lifeScript.removeLife(3);
-			}
-		}
-		if (LittleMacStateInfo.IsName ("Little Mac Punch Right Face Climax") || LittleMacStateInfo.IsName ("Little Mac Punch Left Face Climax")) {
-			if(VonKaiserStateInfo.IsName("Von Kaiser Idle")){
-				source.clip=SuccessfulHeadPunch;
-				if(!source.isPlaying){
-					source.Play();
+
+				if(MatchController.Match.lifeScript.numLives<3){
+					MatchController.Match.lifeScript.removeLife(MatchController.Match.lifeScript.numLives);
 				}
 				else{
-					source.Stop();
-					source.Play();
+					MatchController.Match.lifeScript.removeLife(3);
 				}
-			}
-			else{
-				MatchController.Match.lifeScript.removeLife(1);
 			}
 		}
 
-		if (LittleMacStateInfo.IsName ("Little Mac Punch Left Normal Climax") || LittleMacStateInfo.IsName ("Little Mac Punch Right Normal Climax")) {
-			if(VonKaiserStateInfo.IsName("Von Kaiser Idle")){
-				source.clip=SuccessfulAbPunch;
-				if(!source.isPlaying){
-					source.Play ();
-				}
-				else{
-					source.Stop();
-					source.Play ();
-				}
+
+		if (VonKaiserStateInfo.IsName ("Von Kaiser Punch Climax")) {
+			if(LittleMacStateInfo.IsName("Little Mac Dodge Left")){
+				source.PlayOneShot(VonKaiserJabMiss,1f);
 			}
-			else{
-				MatchController.Match.lifeScript.removeLife(1);
+			if(LittleMacStateInfo.IsName ("Little Mac Dodge Right")){
+				source.PlayOneShot(VonKaiserJabMiss,1f);
+			}
+		}
+
+		if (VonKaiserStateInfo.IsName ("Von Kaiser Upper Climax")|| VonKaiserStateInfo.IsName("Von Kaiser Upper Climax 0")) {
+			if(LittleMacStateInfo.IsName("Little Mac Dodge Left")){
+				source.PlayOneShot(VonKaiserUppercut,1f);
+			}
+			if(LittleMacStateInfo.IsName ("Little Mac Dodge Right")){
+				source.PlayOneShot(VonKaiserUppercut,1f);
 			}
 		}
 
@@ -102,10 +103,12 @@ public class LittleMacAnimator : MonoBehaviour {
 	}
 
 	public void DodgeRight(){
+		source.PlayOneShot(LittleMacDodge,1f);
 		animator.SetTrigger("Dodge Right");
 	}
 
 	public void DodgeLeft(){
+		source.PlayOneShot(LittleMacDodge,1f);
 		animator.SetTrigger("Dodge Left");
 	}
 
@@ -138,7 +141,11 @@ public class LittleMacAnimator : MonoBehaviour {
 	}
 
 	public void StarPunch(){
+		if (LifeScript.LifeController.numLives == 0) {
+			return;
+		}
 		animator.SetTrigger("Star Punch");
+		source.PlayOneShot(LitteMacStarPunchWindUp,1f);
 	}
 	
 	public void Victory(){

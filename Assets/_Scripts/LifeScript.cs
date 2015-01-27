@@ -3,12 +3,18 @@ using System.Collections;
 
 public class LifeScript : MonoBehaviour {
 
+	public static LifeScript LifeController;
+
 	public GameObject[] digits;
 
 	public GameObject lifeOnes;
 	public GameObject lifeTens;
 
-	private int numLives = 0;
+	public int numLives = 0;
+
+	void Awake() {
+		LifeController = this;
+	}
 
 	public void addLife(int life) {
 		numLives += life;

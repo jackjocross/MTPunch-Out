@@ -12,14 +12,24 @@ public class VonKaiserAnimator : MonoBehaviour {
 	public static int curPunchState;
 
 	public int consecutiveHits = 0;
-
+	
 	private bool starPunched = false;
 	private bool blockWhilePunch = false;
 	private bool LMPunching = false;
 
+	public AudioClip VonKaiserBeginFallDown;
+	public AudioClip VonKaiserClimaxFallDown;
+	public AudioClip SuccessfulMacHeadPunch;
+	public AudioClip SuccessfulMacAbPunch;
+	public AudioClip Block;
+
+	private AudioSource source;
+
 	void Awake() {
 		VonKaiserA = this;
 		curPunchState = (int)punchStates.Notset;
+		source=this.GetComponent<AudioSource>();
+		source.panLevel=0;
 	}
 
 	public void intro() {
@@ -34,11 +44,15 @@ public class VonKaiserAnimator : MonoBehaviour {
 	public void bodyBlock() {
 		if (animator.GetCurrentAnimatorStateInfo(0).IsName ("Von Kaiser Body Block")) return;
 		animator.SetTrigger ("Body Block");
+		source.PlayOneShot(Block,1f);
+		LifeScript.LifeController.removeLife(1);
 	}
 
 	public void headBlock() {
 		if (animator.GetCurrentAnimatorStateInfo(0).IsName ("Von Kaiser Head Block")) return;
 		animator.SetTrigger ("Head Block");
+		source.PlayOneShot(Block,1f);
+		LifeScript.LifeController.removeLife(1);
 	}
 
 	public void leftHeadHit() {
@@ -51,19 +65,16 @@ public class VonKaiserAnimator : MonoBehaviour {
 			curPunchState = (int)punchStates.Head;
 		}
 
-		VonKaiserController.health -= 5;
-		print (VonKaiserController.health);
-		VonKaiserController.VonKaiserHealth.fillAmount -= 0.05f;
+		source.PlayOneShot(SuccessfulMacHeadPunch,1f);
+		VonKaiserController.health -= 1;
+		VonKaiserController.VonKaiserHealth.fillAmount -= .03215f;
 		++consecutiveHits;
 
 		if (VonKaiserController.health <= 0) {
+			VonKaiserController.VonKaiserC.knockdowns++;
 			animator.SetTrigger("Knockdown Left");
 			/*Little Mac retreats while Mario counts down*/
-			LittleMacController.LittleMac.animatorScript.animator.SetBool("Retreat",true);
-			marioAnimator.SetTrigger ("Enter");
-			VonKaiserController.health = 100;
-			VonKaiserController.VonKaiserHealth.fillAmount = 1f;
-
+			LittleMacController.LittleMac.animatorScript.animator.SetTrigger("Retreat");
 		}
 		else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Sucker Face") && consecutiveHits > 5) {
 			animator.SetTrigger ("Large Head Hit Left");
@@ -83,17 +94,18 @@ public class VonKaiserAnimator : MonoBehaviour {
 		else {
 			curPunchState = (int)punchStates.Head;
 		}
+		/*Succesful Head Punch by little mac*/
+		source.PlayOneShot(SuccessfulMacHeadPunch,1f);
 
-		VonKaiserController.health -= 5;
-		print (VonKaiserController.health);
-		VonKaiserController.VonKaiserHealth.fillAmount -= 0.05f;
+
+		VonKaiserController.health -=1;
+		VonKaiserController.VonKaiserHealth.fillAmount -= .03125f;
 		++consecutiveHits;
 
 		if (VonKaiserController.health <= 0) {
+			VonKaiserController.VonKaiserC.knockdowns++;
 			animator.SetTrigger("Knockdown Right");
-			marioAnimator.SetTrigger ("Enter");
-			VonKaiserController.health = 100;
-			VonKaiserController.VonKaiserHealth.fillAmount = 1f;
+			LittleMacController.LittleMac.animatorScript.animator.SetTrigger("Retreat");
 		}
 		else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Sucker Face") && consecutiveHits > 5) {
 			animator.SetTrigger ("Large Head Hit Right");
@@ -113,14 +125,20 @@ public class VonKaiserAnimator : MonoBehaviour {
 			curPunchState = (int)punchStates.Body;
 		}
 
-		VonKaiserController.health -= 5;
-		VonKaiserController.VonKaiserHealth.fillAmount -= 0.05f;
+
+		/*Successful body punch by little mac*/
+		source.PlayOneShot(SuccessfulMacAbPunch,1f);
+
+		VonKaiserController.health -= 1;
+		VonKaiserController.VonKaiserHealth.fillAmount -= 0.03125f;
 		++consecutiveHits;
 
 		if (VonKaiserController.health <= 0) {
+			VonKaiserController.VonKaiserC.knockdowns++;
 			animator.SetTrigger("Body Knockdown Left");
-			marioAnimator.SetTrigger ("Enter");
-			VonKaiserController.health = 100;
+			LittleMacController.LittleMac.animatorScript.animator.SetTrigger("Retreat");
+			marioAnimator.SetTrigger("Enter");
+			VonKaiserController.health = 32;
 			VonKaiserController.VonKaiserHealth.fillAmount = 1f;
 		}
 		else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Sucker Face") && consecutiveHits > 5) {
@@ -141,14 +159,18 @@ public class VonKaiserAnimator : MonoBehaviour {
 			curPunchState = (int)punchStates.Body;
 		}
 
-		VonKaiserController.health -= 5;
-		VonKaiserController.VonKaiserHealth.fillAmount -= 0.05f;
+		source.PlayOneShot(SuccessfulMacAbPunch,1f);
+
+		VonKaiserController.health -= 1;
+		VonKaiserController.VonKaiserHealth.fillAmount -= 0.03125f;
 		++consecutiveHits;
 		
 		if (VonKaiserController.health <= 0) {
+			VonKaiserController.VonKaiserC.knockdowns++;
 			animator.SetTrigger("Body Knockdown Right");
+			LittleMacController.LittleMac.animatorScript.animator.SetTrigger("Retreat");
 			marioAnimator.SetTrigger ("Enter");
-			VonKaiserController.health = 100;
+			VonKaiserController.health = 32;
 			VonKaiserController.VonKaiserHealth.fillAmount = 1f;
 		}
 		else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Sucker Face") && consecutiveHits > 5) {
@@ -168,6 +190,7 @@ public class VonKaiserAnimator : MonoBehaviour {
 
 		if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName ("Little Mac Punch Left Normal Climax")) {
 			starPunched = true;
+
 			if (StarScript.StarAccess.getNumStars() < 3) {
 				StarScript.StarAccess.addStar();
 			}
@@ -234,6 +257,18 @@ public class VonKaiserAnimator : MonoBehaviour {
 
 	public void resetLittleMacPunching() {
 		LMPunching = false;
+	}
+
+	public void BeginKnockDown(){
+		source.clip = VonKaiserBeginFallDown;
+		source.Play();
+	}
+
+	public void ClimaxKnockDown(){
+		source.Stop();
+		source.clip = VonKaiserClimaxFallDown;
+		source.Play();
+		marioAnimator.SetTrigger ("Enter");
 	}
 
 	// Use this for initialization

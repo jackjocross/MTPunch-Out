@@ -8,8 +8,8 @@ public class StarScript : MonoBehaviour {
 
 	public static StarScript StarAccess;
 
-	private int numStars = 0;
-
+	public int numStars = 0;
+	
 	void Awake() {
 		StarAccess = this;
 	}
