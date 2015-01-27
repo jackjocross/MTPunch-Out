@@ -13,11 +13,14 @@ public class VonKaiserController : MonoBehaviour {
 
 	public static Image VonKaiserHealth;
 	
-	public static int health;
+	public static float health;
+	public int knockdowns;
+
 
 	void Awake() {
 		VonKaiserC = this;
-		health = 100;
+		health = 32;
+		knockdowns=0;
 	}
 
 	// Use this for initialization

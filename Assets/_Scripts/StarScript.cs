@@ -7,7 +7,7 @@ public class StarScript : MonoBehaviour {
 
 	public GameObject starCount;
 
-	private int numStars = 0;
+	public int numStars = 0;
 
 	void addStar() {
 		++numStars;

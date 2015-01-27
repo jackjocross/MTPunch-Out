@@ -3,6 +3,7 @@ using System.Collections;
 
 public class MatchController : MonoBehaviour {
 	const int LIVES=20;
+	const int NUMBEROFKNOCKDOWNS=3;
 
 	public static MatchController Match;
 
@@ -19,7 +20,6 @@ public class MatchController : MonoBehaviour {
 	public LifeScript lifeScript;
 
 	private int startTime = 0;
-//	private bool canCallDelay = true;
 	/*Bool to determine which music to play*/
 	private bool introduction;
 	private bool fightMusic;
