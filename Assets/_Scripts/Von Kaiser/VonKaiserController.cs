@@ -37,7 +37,6 @@ public class VonKaiserController : MonoBehaviour {
 		if (VonKaiserInfo.IsName("Von Kaiser Idle") || VonKaiserInfo.IsName("Von Kaiser Idle 0") || VonKaiserInfo.IsName("Von Kaiser Idle 0 0")) {
 			VonKaiserAnimator.curPunchState = (int)VonKaiserAnimator.punchStates.Notset;
 			VonKaiserAnimator.VonKaiserA.consecutiveHits = 0;
-			print ("setting punch state to notset");
 		}
 		if ((LittleMacInfo.IsName("Little Mac Punch Left Normal Climax") || LittleMacInfo.IsName("Little Mac Punch Right Normal Climax")) && VonKaiserInfo.IsName("Von Kaiser Idle")) {
 			VonKaiserAnimator.VonKaiserA.bodyBlock ();
@@ -46,7 +45,7 @@ public class VonKaiserController : MonoBehaviour {
 			VonKaiserAnimator.VonKaiserA.headBlock();
 		}
 		else if ((LittleMacInfo.IsName("Little Mac Punch Left Normal Climax") || LittleMacInfo.IsName("Little Mac Punch Right Normal Climax")) && VonKaiserInfo.IsName("Von Kaiser Punch")) {
-			VonKaiserAnimator.VonKaiserA.bodyBlock ();
+//			VonKaiserAnimator.VonKaiserA.bodyBlock ();
 		}
 		else if (LittleMacInfo.IsName("Little Mac Punch Left Face Climax") && VonKaiserInfo.IsName("Von Kaiser Punch Retreat")) {
 			VonKaiserAnimator.VonKaiserA.leftHeadHit();

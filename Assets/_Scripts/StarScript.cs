@@ -4,18 +4,27 @@ using System.Collections;
 public class StarScript : MonoBehaviour {
 
 	public GameObject[] digits;
-
 	public GameObject starCount;
+
+	public static StarScript StarAccess;
 
 	private int numStars = 0;
 
-	void addStar() {
+	void Awake() {
+		StarAccess = this;
+	}
+
+	public void addStar() {
 		++numStars;
 		starCount.GetComponent<SpriteRenderer>().sprite = digits[numStars].GetComponent<SpriteRenderer>().sprite;
 	}
 
-	void removeStar() {
+	public void removeStar() {
 		--numStars;
 		starCount.GetComponent<SpriteRenderer>().sprite = digits[numStars].GetComponent<SpriteRenderer>().sprite;
+	}
+
+	public int getNumStars() {
+		return numStars;
 	}
 }

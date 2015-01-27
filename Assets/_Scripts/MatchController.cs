@@ -59,7 +59,6 @@ public class MatchController : MonoBehaviour {
 			/*Play the fight music if it has not been played*/
 			if(fightMusic==false){ 
 				audio.clip=FightMusic;
-				LittleMac.Walk();
 				audio.Play();
 				fightMusic=true;
 				return;

@@ -13,6 +13,11 @@ public class MarioAnimator : MonoBehaviour {
 		animator.SetTrigger ("Enter");
 	}
 
+	public void startLittleMac() {
+		print ("startLittleMac called!");
+		LittleMacAnimator.LittleMacA.Walk ();
+	}
+
 	public void Awake() {
 	}
 
