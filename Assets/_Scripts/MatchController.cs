@@ -12,6 +12,7 @@ public class MatchController : MonoBehaviour {
 	public AudioClip FightMusic;
 	public AudioClip Bell;
 	public AudioClip VonKaiserFalldownMusic;
+	public AudioClip MatchEnd;
 
 	/*Scripts that we need access to*/
 	public VonKaiserAnimator VonKaiser;
@@ -79,4 +80,7 @@ public class MatchController : MonoBehaviour {
 		audio.Play ();
 	}
 
+	public void EndOfMatch(){
+		audio.PlayOneShot(MatchEnd,1f);
+	}
 }

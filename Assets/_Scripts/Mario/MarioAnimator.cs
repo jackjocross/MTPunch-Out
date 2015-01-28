@@ -6,11 +6,11 @@ public class MarioAnimator : MonoBehaviour {
 	public Animator animator;
 	public AudioClip MarioFightSound;
 	public AudioClip MarioCountSound;
+	public AudioClip MarioTKOSound;
 
 	private AudioSource source;
 
 	public void startLittleMac() {
-		print ("startLittleMac called!");
 		LittleMacAnimator.LittleMacA.Walk ();
 	}
 
@@ -46,6 +46,10 @@ public class MarioAnimator : MonoBehaviour {
 		}
 	}
 
+	public void MarioTKO(){
+		source.PlayOneShot(MarioTKOSound,1f);
+	}
+
 	/*Animation Event that triggers sound to play when Mario is counting*/
 	public void MarioCountDown(int number){
 		print(number);
@@ -54,6 +58,7 @@ public class MarioAnimator : MonoBehaviour {
 			if(VonKaiserController.VonKaiserC.knockdowns==3){
 				animator.SetTrigger ("TKO");
 				LittleMacAnimator.LittleMacA.animator.SetTrigger("Victory");
+				MatchController.Match.EndOfMatch();
 			}
 		}
 		if(number==1){

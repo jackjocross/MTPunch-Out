@@ -205,6 +205,7 @@ public class VonKaiserAnimator : MonoBehaviour {
 			}
 			PointScript.PointController.addPoints(110);
 			leftBodyHit();
+			source.PlayOneShot(StarSound,1f);
 		}
 		else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName ("Little Mac Punch Right Normal Climax")) {
 			starPunched = true;
@@ -213,6 +214,7 @@ public class VonKaiserAnimator : MonoBehaviour {
 			}
 			PointScript.PointController.addPoints(110);
 			rightBodyHit();
+			source.PlayOneShot(StarSound,1f);
 		}
 	}
 
