@@ -2,7 +2,11 @@ fileFormatVersion: 2
 guid: c3d7bf1b03b38452e82476132e5aea0d
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - animator: {instanceID: 0}
+  - MarioFightSound: {fileID: 8300000, guid: 446a66c6d7dd247dd894fb2a0131d629, type: 3}
+  - MarioCountSound: {fileID: 8300000, guid: a67f1ce99fdfe45629f90e0b3ee91943, type: 3}
+  - MarioTKOSound: {fileID: 8300000, guid: 842187bf12e494867809bf6c90ab0142, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
