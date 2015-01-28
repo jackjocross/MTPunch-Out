@@ -97,5 +97,9 @@ public class VonKaiserController : MonoBehaviour {
 			VonKaiserAnimator.VonKaiserA.rightBodyHit();
 		}
 	}
+
+	public void VonKaiserGetsUp(){
+		MatchController.Match.VonKaiserGetsUp();
+	}
 	
 }

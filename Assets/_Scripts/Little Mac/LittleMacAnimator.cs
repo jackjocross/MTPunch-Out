@@ -39,6 +39,7 @@ public class LittleMacAnimator : MonoBehaviour {
 
 			if(VonKaiserStateInfo.IsName ("Von Kaiser Punch Climax")){
 				animator.SetTrigger("Punched By Left");
+				StarScript.StarAccess.numStars=0;
 				LittleMacController.LittleMac.health-=10;
 				LittleMacController.LittleMac.LittleMacHealth.fillAmount-=.1f;
 				if(LittleMacController.LittleMac.LittleMacHealth.fillAmount<=0f){
@@ -53,6 +54,7 @@ public class LittleMacAnimator : MonoBehaviour {
 			}
 			if(VonKaiserStateInfo.IsName("Von Kaiser Upper Climax") || VonKaiserStateInfo.IsName("Von Kaiser Upper Climax 0")){
 				animator.SetTrigger("Punched By Right");
+				StarScript.StarAccess.numStars=0;
 				LittleMacController.LittleMac.health-=20;
 				if(LittleMacController.LittleMac.LittleMacHealth.fillAmount-.2f<=0){
 					LittleMacController.LittleMac.LittleMacHealth.fillAmount=0f;

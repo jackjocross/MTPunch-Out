@@ -5,6 +5,7 @@ public class MarioAnimator : MonoBehaviour {
 
 	public Animator animator;
 	public AudioClip MarioFightSound;
+	public AudioClip MarioCountSound;
 
 	private AudioSource source;
 
@@ -40,6 +41,9 @@ public class MarioAnimator : MonoBehaviour {
 	/*Animation Event that triggers Mario's sound to occur every time he says fight*/
 	public void MarioFight(){
 		source.PlayOneShot(MarioFightSound,1f);
+		if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Retreat")) {
+			LittleMacAnimator.LittleMacA.animator.SetTrigger("Entrance");
+		}
 	}
 
 	/*Animation Event that triggers sound to play when Mario is counting*/
@@ -55,15 +59,30 @@ public class MarioAnimator : MonoBehaviour {
 		if(number==1){
 			if(VonKaiserController.VonKaiserC.knockdowns==1){
 				animator.SetTrigger("Fight");
-				LittleMacAnimator.LittleMacA.animator.SetTrigger("Entrance");
+				VonKaiserController.VonKaiserHealth.fillAmount=.5f;
+				VonKaiserController.health=16f;
+				if (VonKaiserAnimator.VonKaiserA.animator.GetCurrentAnimatorStateInfo (0).IsName ("Von Kaiser Knockdown Right")) {
+					VonKaiserAnimator.VonKaiserA.animator.SetTrigger("Get Up Right");
+				}
+				if (VonKaiserAnimator.VonKaiserA.animator.GetCurrentAnimatorStateInfo (0).IsName ("Von Kaiser Knockdown Left")) {
+					VonKaiserAnimator.VonKaiserA.animator.SetTrigger("Get Up Left");
+				}
 			}
 		}
 
 		if(number==3){
 			if(VonKaiserController.VonKaiserC.knockdowns==2){
 				animator.SetTrigger("Fight");
-				LittleMacAnimator.LittleMacA.animator.SetTrigger("Entrance");
+				VonKaiserController.VonKaiserHealth.fillAmount=.5f;
+				VonKaiserController.health=16f;
+				if (VonKaiserAnimator.VonKaiserA.animator.GetCurrentAnimatorStateInfo (0).IsName ("Von Kaiser Knockdown Right")) {
+					VonKaiserAnimator.VonKaiserA.animator.SetTrigger("Get Up Right");
+				}
+				if (VonKaiserAnimator.VonKaiserA.animator.GetCurrentAnimatorStateInfo (0).IsName ("Von Kaiser Knockdown Left")) {
+					VonKaiserAnimator.VonKaiserA.animator.SetTrigger("Get Up Left");
+				}
 			}
 		}
+		source.PlayOneShot(MarioCountSound,1f);
 	}
 }
