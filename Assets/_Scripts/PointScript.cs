@@ -3,6 +3,8 @@ using System.Collections;
 
 public class PointScript : MonoBehaviour {
 
+	public static PointScript PointController;
+
 	public GameObject[] digits;
 
 	public GameObject pointsOnes;
@@ -13,8 +15,13 @@ public class PointScript : MonoBehaviour {
 	public GameObject pointsHThou;
 
 	private int curScore = 0;
-	
-	void addPoints (int points) {
+
+	void Awake(){
+		PointController = this;
+		resetScore();
+	}
+
+	public void addPoints (int points) {
 
 		curScore += points;
 		int tempScore = curScore;

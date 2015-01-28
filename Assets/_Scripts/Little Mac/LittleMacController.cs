@@ -28,20 +28,6 @@ public class LittleMacController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-//		if (Input.GetKey (KeyCode.Z)) {
-//			if (Input.GetKeyDown (KeyCode.UpArrow)) {
-//				animatorScript.PunchLeftFace();
-//				return;
-//			}
-//		}
-//
-//		if (Input.GetKey (KeyCode.X)) {
-//			if (Input.GetKeyDown (KeyCode.UpArrow)) {
-//				animatorScript.PunchRightFace();
-//				return;
-//			}
-//		}
-
 		/*GetKeyDown only returns selection for one frame so need to check GetKey to check if key is held down*/
 		if (Input.GetKey (KeyCode.UpArrow)) {
 			/*Right Face Punch*/
