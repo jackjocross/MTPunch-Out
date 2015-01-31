@@ -168,4 +168,8 @@ public class LittleMacAnimator : MonoBehaviour {
 	public void backToStartScreen() {
 		Application.LoadLevel("_Scene_Start");
 	}
+
+	public void backToStartScreen() {
+		Application.LoadLevel("_Scene_Start");
+	}
 }
