@@ -57,7 +57,6 @@ public class MarioAnimator : MonoBehaviour {
 		if (number == 0) {
 			if(VonKaiserController.VonKaiserC.knockdowns==3){
 				print ("loading mario luigi scene");
-				Application.LoadLevel("_Scene_Mario_Luigi");
 				animator.SetTrigger ("TKO");
 				LittleMacAnimator.LittleMacA.animator.SetTrigger("Victory");
 				MatchController.Match.EndOfMatch();
