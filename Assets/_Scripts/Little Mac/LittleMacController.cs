@@ -4,19 +4,25 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class LittleMacController : MonoBehaviour {
-
+	/*Static variable for access to this singleton*/
 	public static LittleMacController LittleMac;
 	
 	/*Set in inspector*/
 	public float tapSpeed;
-	public int health;
-	public Image LittleMacHealth;
 
+	public int health;
+	public int knockdowns;
+	public Image LittleMacHealth;
 	public LittleMacAnimator animatorScript;
+
+	private Time timeSinceLastPress;
+	private bool isALastButtonPressed;
+	private int numberOfButtonPresses;
 
 	void Awake(){
 		LittleMac = this;
 		health=100;
+		knockdowns=0;
 	}
 	
 	// Use this for initialization
@@ -27,6 +33,50 @@ public class LittleMacController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		/*If down key (or S) is held down, should stay in shield position*/
+		if(Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)){
+			if(Time.time-animatorScript.animator.GetFloat("shieldTime")<tapSpeed){
+				//animatorScript.Duck();
+				animatorScript.animator.SetFloat("shieldTime",0);
+			}
+			else{
+				animatorScript.ShieldBegin();
+				/*Record time of shield press*/
+				animatorScript.animator.SetFloat("shieldTime",Time.time);
+			}
+		}
+		if (Input.GetKeyUp (KeyCode.DownArrow) || Input.GetKeyUp (KeyCode.S)) {
+			animatorScript.ShieldEnd();
+		}
+
+		/*Little Mac is in various stages of Knockdown State, must quickly press buttons to advance back to idle*/
+		if (animatorScript.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Falldown") || animatorScript.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Gets Up Stage 1") || animatorScript.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Gets Up Stage 2") || animatorScript.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Gets Up Stage 3")) {
+			if(Input.GetKeyUp(KeyCode.X)||Input.GetKeyUp(KeyCode.Period)){
+				numberOfButtonPresses++;
+			}
+			if(Input.GetKey(KeyCode.Z)||Input.GetKey(KeyCode.Comma)){
+				numberOfButtonPresses++;
+			}
+			/*Read the number of button presses to determine if we should advance to next stage of getting up*/
+			if(numberOfButtonPresses==4){
+				animatorScript.animator.SetTrigger("Get Up Stage 1");
+			}
+
+			if(numberOfButtonPresses==8){
+				animatorScript.animator.SetTrigger("Get Up Stage 2");
+			}
+
+			if(numberOfButtonPresses==12){
+				animatorScript.animator.SetTrigger("Get Up Stage 3");
+			}
+			return;
+		}
+
+		/*Don't queue button presses when you're in the middle of animation*/
+		if (IsAnimationActionPlaying ()) {
+			return;
+		}
 
 		/*GetKeyDown only returns selection for one frame so need to check GetKey to check if key is held down*/
 		if (Input.GetKey (KeyCode.UpArrow)) {
@@ -72,22 +122,6 @@ public class LittleMacController : MonoBehaviour {
 
 		/*Directional Inputs*/
 
-		/*If down key (or S) is held down, should stay in shield position*/
-		if(Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)){
-			if(Time.time-animatorScript.animator.GetFloat("shieldTime")<tapSpeed){
-				//animatorScript.Duck();
-				animatorScript.animator.SetFloat("shieldTime",0);
-			}
-			else{
-				animatorScript.ShieldBegin();
-				/*Record time of shield press*/
-				animatorScript.animator.SetFloat("shieldTime",Time.time);
-			}
-		}
-		if (Input.GetKeyUp (KeyCode.DownArrow) || Input.GetKeyUp (KeyCode.S)) {
-			animatorScript.ShieldEnd();
-		}
-
 		if(Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)){
 			animatorScript.DodgeRight();
 		}
@@ -116,6 +150,9 @@ public class LittleMacController : MonoBehaviour {
 		return !animatorScript.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Idle");
 	}
 
-
+	/*When Little Mac disappears of screen, Von Kaiser backs up and Mario Enters to begin count down*/
+	public void EndOfFalldown(){
+		VonKaiserAnimator.VonKaiserA.animator.SetTrigger("Retreat");
+	}
 
 }

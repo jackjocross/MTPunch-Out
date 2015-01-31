@@ -10,6 +10,7 @@ public class LittleMacAnimator : MonoBehaviour {
 	public AudioClip LitteMacStarPunchWindUp;
 	public AudioClip VonKaiserJabMiss;
 	public AudioClip VonKaiserUppercut;
+	public AudioClip VonKaiserSuccessfulJab;
 
 
 	private VonKaiserController VonKaiser;
@@ -35,11 +36,11 @@ public class LittleMacAnimator : MonoBehaviour {
 
 		/*If Little Mac is idle, check if he's getting punched*/
 		if (LittleMacStateInfo.IsName ("Little Mac Idle")) {
-			//If Von Kaiser at at climax of left punch, Little Mac gets hit
-
+			/*If Von Kaiser is at climax of left punch, Little Mac gets hit*/
 			if(VonKaiserStateInfo.IsName ("Von Kaiser Punch Climax")){
 				animator.SetTrigger("Punched By Left");
-				StarScript.StarAccess.removeStar();
+				audio.PlayOneShot(VonKaiserSuccessfulJab,1f);
+				StarScript.StarAccess.removeStar(1);
 				LittleMacController.LittleMac.health-=10;
 				LittleMacController.LittleMac.LittleMacHealth.fillAmount-=.1f;
 				if(LittleMacController.LittleMac.LittleMacHealth.fillAmount<=0f){
@@ -52,10 +53,11 @@ public class LittleMacAnimator : MonoBehaviour {
 					MatchController.Match.lifeScript.removeLife(3);
 				}
 			}
+			/*If Von Kaiser is at climax of his uppercut, Little Mac gets hit*/
 			if(VonKaiserStateInfo.IsName("Von Kaiser Upper Climax") || VonKaiserStateInfo.IsName("Von Kaiser Upper Climax 0")){
 				print ("uppercut");
 				animator.SetTrigger("Punched By Right");
-				StarScript.StarAccess.removeStar();
+				StarScript.StarAccess.removeStar(1);
 				LittleMacController.LittleMac.health-=20;
 				if(LittleMacController.LittleMac.LittleMacHealth.fillAmount-.2f<=0){
 					LittleMacController.LittleMac.LittleMacHealth.fillAmount=0f;
@@ -160,6 +162,6 @@ public class LittleMacAnimator : MonoBehaviour {
 	}
 
 	public void Falldown(){
-		animator.SetBool ("Falldown", true);
+		animator.SetTrigger("Falldown");
 	}
 }

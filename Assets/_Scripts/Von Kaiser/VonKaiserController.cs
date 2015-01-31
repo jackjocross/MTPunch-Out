@@ -6,8 +6,6 @@ public class VonKaiserController : MonoBehaviour {
 	
 	public static VonKaiserController VonKaiserC;
 
-	//public static LittleMacAnimator LittleMac;
-
 	public static AnimatorStateInfo LittleMacInfo;
 	public static AnimatorStateInfo VonKaiserInfo;
 
