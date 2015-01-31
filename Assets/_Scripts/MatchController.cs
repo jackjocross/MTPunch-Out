@@ -21,6 +21,8 @@ public class MatchController : MonoBehaviour {
 	public GameObject mario;
 	public LifeScript lifeScript;
 
+	public int roundNum;
+
 	private int startTime = 0;
 	/*Bool to determine which music to play*/
 	private bool introduction;
@@ -28,6 +30,7 @@ public class MatchController : MonoBehaviour {
 
 	void Awake(){
 		Match = this;
+		roundNum = 1;
 	}
 
 	// Use this for initialization
@@ -83,4 +86,6 @@ public class MatchController : MonoBehaviour {
 	public void EndOfMatch(){
 		audio.PlayOneShot(MatchEnd,1f);
 	}
+
+
 }

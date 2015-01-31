@@ -162,4 +162,8 @@ public class LittleMacAnimator : MonoBehaviour {
 	public void Falldown(){
 		animator.SetBool ("Falldown", true);
 	}
+
+	public void backToStartScreen() {
+		Application.LoadLevel("_Scene_Start");
+	}
 }
