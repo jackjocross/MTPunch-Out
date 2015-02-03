@@ -5,7 +5,14 @@ public class StartScreen : MonoBehaviour {
 	
 	public GameObject boxingGloves;
 
+	public AudioClip Intro;
+	private AudioSource source;
 	private int currentSelection = 0;
+
+	void Awake(){
+		source=this.GetComponent<AudioSource>();
+		source.panLevel=0;
+	}
 
 	// Update is called once per frame
 	void Update () {

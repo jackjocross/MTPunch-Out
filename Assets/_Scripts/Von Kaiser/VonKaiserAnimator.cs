@@ -37,11 +37,6 @@ public class VonKaiserAnimator : MonoBehaviour {
 		animator.SetTrigger ("Intro");
 	}
 
-	public void punch() {
-		if (animator.GetCurrentAnimatorStateInfo(0).IsName ("Von Kaiser Punch")) return;
-		animator.SetTrigger ("Punch");
-	}
-
 	public void bodyBlock() {
 		if (animator.GetCurrentAnimatorStateInfo(0).IsName ("Von Kaiser Body Block")) return;
 		animator.SetTrigger ("Body Block");
@@ -287,7 +282,7 @@ public class VonKaiserAnimator : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		animator.SetBool("Punch",true);
 	}
 	
 	// Update is called once per frame

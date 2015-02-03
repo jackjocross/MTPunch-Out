@@ -17,12 +17,14 @@ public class LittleMacController : MonoBehaviour {
 
 	private Time timeSinceLastPress;
 	private bool isALastButtonPressed;
+	private bool canShield;
 	private int numberOfButtonPresses;
 
 	void Awake(){
 		LittleMac = this;
 		health=100;
 		knockdowns=0;
+		canShield = true;
 	}
 	
 	// Use this for initialization
@@ -36,18 +38,22 @@ public class LittleMacController : MonoBehaviour {
 
 		/*If down key (or S) is held down, should stay in shield position*/
 		if(Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)){
-			if(Time.time-animatorScript.animator.GetFloat("shieldTime")<tapSpeed){
-				//animatorScript.Duck();
-				animatorScript.animator.SetFloat("shieldTime",0);
-			}
-			else{
-				animatorScript.ShieldBegin();
-				/*Record time of shield press*/
-				animatorScript.animator.SetFloat("shieldTime",Time.time);
+			if(canShield==true){
+				if(Time.time-animatorScript.animator.GetFloat("shieldTime")<tapSpeed){
+					//animatorScript.Duck();
+					animatorScript.animator.SetFloat("shieldTime",0);
+				}
+				else{
+					animatorScript.ShieldBegin();
+					canShield=false;
+					/*Record time of shield press*/
+					animatorScript.animator.SetFloat("shieldTime",Time.time);
+				}
 			}
 		}
 		if (Input.GetKeyUp (KeyCode.DownArrow) || Input.GetKeyUp (KeyCode.S)) {
 			animatorScript.ShieldEnd();
+			canShield=true;
 		}
 
 		/*Little Mac is in various stages of Knockdown State, must quickly press buttons to advance back to idle*/
@@ -55,7 +61,7 @@ public class LittleMacController : MonoBehaviour {
 			if(Input.GetKeyUp(KeyCode.X)||Input.GetKeyUp(KeyCode.Period)){
 				numberOfButtonPresses++;
 			}
-			if(Input.GetKey(KeyCode.Z)||Input.GetKey(KeyCode.Comma)){
+			if(Input.GetKeyUp(KeyCode.Z)||Input.GetKeyUp(KeyCode.Comma)){
 				numberOfButtonPresses++;
 			}
 			/*Read the number of button presses to determine if we should advance to next stage of getting up*/
@@ -68,7 +74,13 @@ public class LittleMacController : MonoBehaviour {
 			}
 
 			if(numberOfButtonPresses==12){
+				if(VonKaiserAnimator.VonKaiserA.animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Victory")){
+					return;
+				}
 				animatorScript.animator.SetTrigger("Get Up Stage 3");
+				MatchController.Match.MacGetsUp();
+				MarioAnimator.MarioA.animator.SetTrigger("Fight");
+				numberOfButtonPresses=0;
 			}
 			return;
 		}
@@ -149,10 +161,5 @@ public class LittleMacController : MonoBehaviour {
 	bool IsAnimationActionPlaying(){
 		return !animatorScript.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Idle");
 	}
-
-	/*When Little Mac disappears of screen, Von Kaiser backs up and Mario Enters to begin count down*/
-	public void EndOfFalldown(){
-		VonKaiserAnimator.VonKaiserA.animator.SetTrigger("Retreat");
-	}
-
+	
 }
