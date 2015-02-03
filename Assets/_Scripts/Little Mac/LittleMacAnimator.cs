@@ -11,10 +11,7 @@ public class LittleMacAnimator : MonoBehaviour {
 	public AudioClip VonKaiserJabMiss;
 	public AudioClip VonKaiserUppercut;
 
-
-	private VonKaiserController VonKaiser;
 	private AudioSource source;
-
 
 	void Awake(){
 		animator=GetComponent<Animator>();
@@ -23,10 +20,6 @@ public class LittleMacAnimator : MonoBehaviour {
 		LittleMacA = this;
 	}
 
-	void Start () {
-		VonKaiser = VonKaiserController.VonKaiserC;
-	}
-	
 	// Update is called once per frame
 	void Update () {
 		/*Get Current States of Von Kaiser and Little Mac*/
@@ -163,7 +156,61 @@ public class LittleMacAnimator : MonoBehaviour {
 		animator.SetBool ("Falldown", true);
 	}
 
+	public void Twitch() {
+		animator.SetTrigger ("Twitch");
+		MarioLuigiAnimator.marioLuigiA.mario.SetTrigger ("Twitch");
+	}
+
 	public void backToStartScreen() {
 		Application.LoadLevel("_Scene_Start");
 	}
+
+	public void marioLuigiBodyDodge() {
+
+		// suppress console errors
+		if (!Application.loadedLevelName.Equals ("_Scene_Mario_Luigi")) {
+			return;
+		}
+
+		if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Idle")) {
+			//print ("little mac is done punching");
+			return;
+		}
+		else if (MarioLuigiAnimator.marioLuigiA.mario.GetCurrentAnimatorStateInfo(0).IsName("Enemy Mario Dodge")) {
+			//print ("mario and luigi are already punching");
+			return;
+		}
+		else if (MarioLuigiAnimator.marioLuigiA.mario.GetCurrentAnimatorStateInfo(0).IsName("Enemy Mario Punch")) {
+			//print ("mario is punching little mac");
+			return;
+		}
+
+		MarioLuigiAnimator.marioLuigiA.marioBodyDodge ();
+		MarioLuigiAnimator.marioLuigiA.luigiBodyDodge ();
+	}
+
+	public void luigiBodyPunch() {
+		// suppress console errors
+		if (!Application.loadedLevelName.Equals ("_Scene_Mario_Luigi")) {
+			return;
+		}
+
+		if (MarioLuigiAnimator.marioLuigiA.luigi.GetCurrentAnimatorStateInfo(0).IsName("Enemy Luigi Scared")) {
+			//MarioLuigiAnimator.marioLuigiA.luigi.SetTrigger("Punched");
+			MarioLuigiController.MarioLuigiC.luigiHit(true);
+		}
+	}
+
+	public void luigiHeadPunch() {
+		// suppress console errors
+		if (!Application.loadedLevelName.Equals ("_Scene_Mario_Luigi")) {
+			return;
+		}
+
+		if (MarioLuigiAnimator.marioLuigiA.luigi.GetCurrentAnimatorStateInfo(0).IsName("Enemy Luigi Scared")) {
+			//MarioLuigiAnimator.marioLuigiA.luigi.SetTrigger("Head Punched");
+			MarioLuigiController.MarioLuigiC.luigiHit(false);
+		}
+	}
+	
 }

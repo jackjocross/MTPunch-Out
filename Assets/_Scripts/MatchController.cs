@@ -2,10 +2,10 @@
 using System.Collections;
 
 public class MatchController : MonoBehaviour {
-	const int LIVES=20;
 	const int NUMBEROFKNOCKDOWNS=3;
 
 	public static MatchController Match;
+	public int roundNum;
 
 	/*Audio Clips to be handle by match controller signaling end and beginning of round/match*/
 	public AudioClip VonKaiserIntroduction;
@@ -21,7 +21,6 @@ public class MatchController : MonoBehaviour {
 	public GameObject mario;
 	public LifeScript lifeScript;
 
-	public int roundNum;
 
 	private int startTime = 0;
 	/*Bool to determine which music to play*/
@@ -30,14 +29,14 @@ public class MatchController : MonoBehaviour {
 
 	void Awake(){
 		Match = this;
-		roundNum = 1;
+		roundNum = SaveScene.roundNum;
 	}
 
 	// Use this for initialization
 	void Start () {;
 		introduction = false;
 		fightMusic = false;
-		lifeScript.addLife(LIVES);
+		lifeScript.addLife(SaveScene.hearts);
 		audio.clip = Bell;
 		audio.Play ();
 	}

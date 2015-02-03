@@ -19,13 +19,14 @@ public class VonKaiserController : MonoBehaviour {
 
 	void Awake() {
 		VonKaiserC = this;
-		health = 32;
 		knockdowns=0;
 	}
 
 	// Use this for initialization
 	void Start () {
+		health = SaveScene.vonKaiserHealth;
 		VonKaiserHealth = GameObject.Find ("Von Kaiser Health").GetComponent<Image>();
+		VonKaiserHealth.fillAmount = health * 0.03125f;
 		VonKaiserAnimator.VonKaiserA.intro ();
 	}
 
