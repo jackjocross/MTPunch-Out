@@ -73,19 +73,17 @@ public class MarioAnimator : MonoBehaviour {
 		if (number == 0) {
 			/*Von Kaiser gets TKOed*/
 			if(VonKaiserController.VonKaiserC.knockdowns==3){
-				print ("loading mario luigi scene");
 				animator.SetTrigger ("TKO");
 				LittleMacAnimator.LittleMacA.animator.SetTrigger("Victory");
 			}
 			/*Little Mac gets TKOed*/
 			if(LittleMacController.LittleMac.knockdowns==3){
-				print ("Mac Gets KOed");
 				animator.SetTrigger("TKO");
 			}
 		}
 		if(number==1){
 			if(VonKaiserController.VonKaiserC.knockdowns==1){
-				animator.SetTrigger("Fight");
+				animator.SetTrigger("Intro");
 				VonKaiserController.VonKaiserHealth.fillAmount=.5f;
 				VonKaiserController.health=16f;
 				if (VonKaiserAnimator.VonKaiserA.animator.GetCurrentAnimatorStateInfo (0).IsName ("Von Kaiser Knockdown Right")) {
@@ -99,7 +97,7 @@ public class MarioAnimator : MonoBehaviour {
 
 		if(number==3){
 			if(VonKaiserController.VonKaiserC.knockdowns==2){
-				animator.SetTrigger("Fight");
+				animator.SetTrigger("Intro");
 				VonKaiserController.VonKaiserHealth.fillAmount=.5f;
 				VonKaiserController.health=16f;
 				if (VonKaiserAnimator.VonKaiserA.animator.GetCurrentAnimatorStateInfo (0).IsName ("Von Kaiser Knockdown Right")) {

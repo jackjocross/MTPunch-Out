@@ -17,7 +17,6 @@ public class ClockScript : MonoBehaviour {
 	private int updateTime = 0;
 	private int realTime = 0;
 	private bool started = false;
-	private bool gameEnded = false;
 
 	void Awake(){
 		clock = this;
@@ -28,14 +27,7 @@ public class ClockScript : MonoBehaviour {
 	void FixedUpdate() {
 		if (started) timerUpdate ();
 	}
-
-	void Update(){
-		if (gameEnded) {
-			gameEnded = false;
-			Invoke ("EndOfRound", RoundEnd.length);
-		}
-	}
-
+	
 	public void startTimer() {
 		started = true;
 	}
@@ -50,7 +42,7 @@ public class ClockScript : MonoBehaviour {
 				//Freeze Scene and play round end bell
 				Time.timeScale=0;
 				source.PlayOneShot(RoundEnd,1f);
-				gameEnded=true;
+				StartCoroutine(EndOfRound());
 			}		
 			int seconds = updateTime / 17;
 			int minutes = seconds / 60;
@@ -64,8 +56,10 @@ public class ClockScript : MonoBehaviour {
 		}
 	}
 
-	void EndOfRound(){
-		print ("END OF ROUND");
+	IEnumerator EndOfRound(){
+		print("BEFORE");
+		yield return new WaitForSeconds(2f);
+		print ("After end of round");
 		if (MatchController.Match.roundNum == 1) {
 			Application.LoadLevel("_Scene_Round_Two_Original");
 		}

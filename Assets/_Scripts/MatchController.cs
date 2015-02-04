@@ -81,6 +81,8 @@ public class MatchController : MonoBehaviour {
 		audio.Stop ();
 		audio.clip = FightMusic;
 		audio.Play ();
+		MarioAnimator.MarioA.animator.SetTrigger("Fight");
+		LittleMacAnimator.LittleMacA.animator.SetTrigger("Entrance");
 	}
 
 	public void MacFallsDown(){

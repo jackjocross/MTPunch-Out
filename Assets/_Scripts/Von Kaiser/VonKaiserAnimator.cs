@@ -60,8 +60,6 @@ public class VonKaiserAnimator : MonoBehaviour {
 		else {
 			curPunchState = (int)punchStates.Head;
 		}
-
-		source.PlayOneShot(SuccessfulMacHeadPunch,1f);
 		VonKaiserController.health -= 1;
 		VonKaiserController.VonKaiserHealth.fillAmount -= .03215f;
 		++consecutiveHits;
@@ -93,9 +91,6 @@ public class VonKaiserAnimator : MonoBehaviour {
 		else {
 			curPunchState = (int)punchStates.Head;
 		}
-		/*Succesful Head Punch by little mac*/
-		source.PlayOneShot(SuccessfulMacHeadPunch,1f);
-
 
 		VonKaiserController.health -=1;
 		VonKaiserController.VonKaiserHealth.fillAmount -= .03125f;
@@ -127,10 +122,6 @@ public class VonKaiserAnimator : MonoBehaviour {
 			curPunchState = (int)punchStates.Body;
 		}
 
-
-		/*Successful body punch by little mac*/
-		source.PlayOneShot(SuccessfulMacAbPunch,1f);
-
 		VonKaiserController.health -= 1;
 		VonKaiserController.VonKaiserHealth.fillAmount -= 0.03125f;
 		++consecutiveHits;
@@ -161,8 +152,6 @@ public class VonKaiserAnimator : MonoBehaviour {
 		else {
 			curPunchState = (int)punchStates.Body;
 		}
-
-		source.PlayOneShot(SuccessfulMacAbPunch,1f);
 
 		VonKaiserController.health -= 1;
 		VonKaiserController.VonKaiserHealth.fillAmount -= 0.03125f;
@@ -278,6 +267,18 @@ public class VonKaiserAnimator : MonoBehaviour {
 		source.Play();
 		MatchController.Match.VonKaiserKnockDown();
 		marioAnimator.SetTrigger ("Enter");
+	}
+
+	public void HeadHit(){
+		source.PlayOneShot(SuccessfulMacHeadPunch,1f);
+	}
+
+	public void LargeHeadHit(){
+		source.PlayOneShot(SuccessfulMacAbPunch,1f);
+	}
+
+	public void AbHit(){
+		source.PlayOneShot(SuccessfulMacAbPunch,1f);
 	}
 
 	// Use this for initialization
