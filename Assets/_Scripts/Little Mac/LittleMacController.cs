@@ -58,6 +58,9 @@ public class LittleMacController : MonoBehaviour {
 
 		/*Little Mac is in various stages of Knockdown State, must quickly press buttons to advance back to idle*/
 		if (animatorScript.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Falldown") || animatorScript.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Gets Up Stage 1") || animatorScript.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Gets Up Stage 2") || animatorScript.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Gets Up Stage 3")) {
+			if(VonKaiserAnimator.VonKaiserA.animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Victory")){
+				return;
+			}
 			if(Input.GetKeyUp(KeyCode.X)||Input.GetKeyUp(KeyCode.Period)){
 				numberOfButtonPresses++;
 			}
@@ -74,9 +77,6 @@ public class LittleMacController : MonoBehaviour {
 			}
 
 			if(numberOfButtonPresses==12){
-				if(VonKaiserAnimator.VonKaiserA.animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Victory")){
-					return;
-				}
 				animatorScript.animator.SetTrigger("Get Up Stage 3");
 				MatchController.Match.MacGetsUp();
 				MarioAnimator.MarioA.animator.SetTrigger("Fight");
