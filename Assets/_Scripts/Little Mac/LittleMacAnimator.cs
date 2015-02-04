@@ -11,7 +11,14 @@ public class LittleMacAnimator : MonoBehaviour {
 	public AudioClip VonKaiserJabMiss;
 	public AudioClip VonKaiserUppercut;
 
+	public AudioClip VonKaiserSuccessfulJab;
+	public AudioClip LittleMacKnockdown;
+	public AudioClip LittleMacHitsTheFloor;
+
 	private AudioSource source;
+
+	private int numMarioPunches = 0;
+	public bool lastBattleHappened = false;
 
 	void Awake(){
 		animator=GetComponent<Animator>();
@@ -26,17 +33,29 @@ public class LittleMacAnimator : MonoBehaviour {
 		AnimatorStateInfo LittleMacStateInfo=animator.GetCurrentAnimatorStateInfo(0);
 		AnimatorStateInfo VonKaiserStateInfo = VonKaiserController.VonKaiserInfo;
 
-		/*If Little Mac is idle, check if he's getting punched*/
-		if (LittleMacStateInfo.IsName ("Little Mac Idle")) {
-			//If Von Kaiser at at climax of left punch, Little Mac gets hit
-
+		/*If Little Mac is In Shield stance, end shield if hit by a jab*/
+		if (LittleMacStateInfo.IsName ("Little Mac Shield")) {
 			if(VonKaiserStateInfo.IsName ("Von Kaiser Punch Climax")){
-				animator.SetTrigger("Punched By Left");
-				StarScript.StarAccess.removeStar();
+				ShieldEnd();
+				return;
+			}
+		}
+
+		/*If Little Mac is in a punchable state*/
+		if (isLittleMacPunchable()) {
+			/*If Von Kaiser is at climax of left punch, Little Mac gets hit*/
+			if(VonKaiserStateInfo.IsName ("Von Kaiser Punch Climax")){
+				audio.PlayOneShot(VonKaiserSuccessfulJab,1f);
+				StarScript.StarAccess.removeStar(1);
 				LittleMacController.LittleMac.health-=10;
 				LittleMacController.LittleMac.LittleMacHealth.fillAmount-=.1f;
+				/*Determine if Little Mac has been knocked down and play correct response animation*/
 				if(LittleMacController.LittleMac.LittleMacHealth.fillAmount<=0f){
+					LittleMacController.LittleMac.knockdowns++;
 					Falldown();
+				}
+				else{
+					animator.SetTrigger("Punched By Left");
 				}
 				if(MatchController.Match.lifeScript.numLives<3){
 					MatchController.Match.lifeScript.removeLife(MatchController.Match.lifeScript.numLives);
@@ -45,16 +64,19 @@ public class LittleMacAnimator : MonoBehaviour {
 					MatchController.Match.lifeScript.removeLife(3);
 				}
 			}
+			/*If Von Kaiser is at climax of his uppercut, Little Mac gets hit*/
 			if(VonKaiserStateInfo.IsName("Von Kaiser Upper Climax") || VonKaiserStateInfo.IsName("Von Kaiser Upper Climax 0")){
 				print ("uppercut");
-				animator.SetTrigger("Punched By Right");
-				StarScript.StarAccess.removeStar();
+				source.PlayOneShot(VonKaiserJabMiss,1f);
+				StarScript.StarAccess.removeStar(1);
 				LittleMacController.LittleMac.health-=20;
 				if(LittleMacController.LittleMac.LittleMacHealth.fillAmount-.2f<=0){
 					LittleMacController.LittleMac.LittleMacHealth.fillAmount=0f;
+					LittleMacController.LittleMac.knockdowns++;
 					Falldown();
 				}
 				else{
+					animator.SetTrigger("Punched By Right");
 					LittleMacController.LittleMac.LittleMacHealth.fillAmount-=.2f;
 				}
 
@@ -85,17 +107,6 @@ public class LittleMacAnimator : MonoBehaviour {
 				source.PlayOneShot(VonKaiserUppercut,1f);
 			}
 		}
-
-		if (LittleMacStateInfo.IsName ("Little Mac Shield")) {
-			/*If Little Mac has his shield and Von Kaiser punches, block it, and return to idle*/
-			if(VonKaiserStateInfo.IsName("Von Kaiser Punch Retreat")){
-				animator.SetBool("Shield",false);
-			}
-		}
-
-		if (LittleMacStateInfo.IsName ("Little Mac Falldown")) {
-
-		}
 	}
 
 	public void DodgeRight(){
@@ -125,6 +136,9 @@ public class LittleMacAnimator : MonoBehaviour {
 	}
 
 	public void PunchRightNormal(){
+		/*if (VonKaiserAnimator.VonKaiserA.animator.GetCurrentAnimatorStateInfo (0).IsName ("Von Kaiser Punch")) {
+			return;
+		}*/
 		animator.SetTrigger("Punch Right Normal");
 	}
 
@@ -153,7 +167,8 @@ public class LittleMacAnimator : MonoBehaviour {
 	}
 
 	public void Falldown(){
-		animator.SetBool ("Falldown", true);
+		animator.SetTrigger("Falldown");
+		VonKaiserAnimator.VonKaiserA.animator.SetBool("Punch",false);
 	}
 
 	public void Twitch() {
@@ -184,6 +199,27 @@ public class LittleMacAnimator : MonoBehaviour {
 			//print ("mario is punching little mac");
 			return;
 		}
+		else if (MarioLuigiAnimator.marioLuigiA.luigi.GetCurrentAnimatorStateInfo(0).IsName("Enemy Luigi Scared")) {
+			return;
+		}
+		else if (MarioLuigiAnimator.marioLuigiA.luigi.GetCurrentAnimatorStateInfo(0).IsName("Enemy Luigi Punched")) {
+			return;
+		}
+		else if (MarioLuigiAnimator.marioLuigiA.luigi.GetCurrentAnimatorStateInfo(0).IsName("Enemy Luigi Head Punched")) {
+			return;
+		}
+		else if (MarioLuigiAnimator.marioLuigiA.mario.GetCurrentAnimatorStateInfo(0).IsName("Enemy Mario Idle Solo")) {
+			return;
+		}
+		else if (MarioLuigiAnimator.marioLuigiA.mario.GetCurrentAnimatorStateInfo(0).IsName("Enemy Mario Hit")) {
+			return;
+		}
+
+		LifeScript.LifeController.removeLife (1);
+		if (LifeScript.LifeController.numLives == 0) {
+			// TODO Make the tired state
+			print ("all out of lives!!");
+		}
 
 		MarioLuigiAnimator.marioLuigiA.marioBodyDodge ();
 		MarioLuigiAnimator.marioLuigiA.luigiBodyDodge ();
@@ -212,5 +248,90 @@ public class LittleMacAnimator : MonoBehaviour {
 			MarioLuigiController.MarioLuigiC.luigiHit(false);
 		}
 	}
+
+	public void marioBodyPunch() {
+		// suppress console errors
+		if (!Application.loadedLevelName.Equals ("_Scene_Mario_Luigi")) {
+			return;
+		}
+		
+		if (MarioLuigiAnimator.marioLuigiA.mario.GetCurrentAnimatorStateInfo(0).IsName("Enemy Mario Idle Solo")) {
+
+			if ((MarioLuigiController.marioHealth == 1) && !lastBattleHappened){
+				lastEpicBattle();
+			}
+			else if (numMarioPunches == 3) {
+				MarioLuigiAnimator.marioLuigiA.mario.SetTrigger("Dodge Solo");
+				numMarioPunches = 0;
+			}
+			else {
+				MarioLuigiController.MarioLuigiC.marioHit(false);
+				numMarioPunches++;
+			}
+		}
+	}
 	
+	public void marioHeadPunch() {
+		// suppress console errors
+		if (!Application.loadedLevelName.Equals ("_Scene_Mario_Luigi")) {
+			return;
+		}
+
+		if ((MarioLuigiController.marioHealth == 1) && !lastBattleHappened) {
+			lastEpicBattle();
+		}
+		else if (MarioLuigiAnimator.marioLuigiA.mario.GetCurrentAnimatorStateInfo (0).IsName ("Enemy Mario Hit")) {
+			return;
+		}
+
+		if (MarioLuigiAnimator.marioLuigiA.mario.GetCurrentAnimatorStateInfo(0).IsName("Enemy Mario Idle Solo")) {
+			if (numMarioPunches == 3) {
+				MarioLuigiAnimator.marioLuigiA.mario.SetTrigger("Dodge Solo");
+				numMarioPunches = 0;
+			}
+			else {
+				MarioLuigiController.MarioLuigiC.marioHit(false);
+				numMarioPunches++;
+			}
+		}
+	}
+
+	public bool isLittleMacPunchable(){
+		AnimatorStateInfo state=animator.GetCurrentAnimatorStateInfo(0);
+		if(state.IsName("Little Mac Idle")){
+			return true;
+		}
+		if(state.IsName("Little Mac Punch Right Normal")){
+			return true;
+		}
+		if (state.IsName ("Little Mac Punch Right Face")) {
+			return true;
+		}
+		if (state.IsName ("Little Mac Punch Left Face")) {
+			return true;
+		}
+		if (state.IsName ("Little Mac Punch Left Normal")) {
+			return true;
+		}
+		return false;
+	}
+
+	
+	public void LittleMacKnockoutBegin(){
+		source.PlayOneShot(LittleMacKnockdown);
+	}
+	
+	public void LittleMacKnockoutEnd(){
+		VonKaiserAnimator.VonKaiserA.animator.SetTrigger("Retreat");
+		MarioAnimator.MarioA.animator.SetTrigger("Enter");
+	}
+
+	public void lastEpicBattle() {
+		lastBattleHappened = true;
+		MarioLuigiAnimator.marioLuigiA.mario.SetTrigger("Last Cling");
+//		MarioLuigiAnimator.marioLuigiA.luigi.SetTrigger ("Reborn");
+		MarioLuigiController.luigiHealth = 1;
+		MarioLuigiController.marioHealthBar.fillAmount = 0.03125f;
+	}
+
 }

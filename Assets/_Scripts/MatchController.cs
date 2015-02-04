@@ -12,7 +12,7 @@ public class MatchController : MonoBehaviour {
 	public AudioClip FightMusic;
 	public AudioClip Bell;
 	public AudioClip VonKaiserFalldownMusic;
-	public AudioClip MatchEnd;
+	public AudioClip LittleMacFalldownMusic;
 
 	/*Scripts that we need access to*/
 	public VonKaiserAnimator VonKaiser;
@@ -82,9 +82,16 @@ public class MatchController : MonoBehaviour {
 		audio.Play ();
 	}
 
-	public void EndOfMatch(){
-		audio.PlayOneShot(MatchEnd,1f);
+	public void MacFallsDown(){
+		audio.Stop();
+		audio.clip = LittleMacFalldownMusic;
+		audio.Play();
 	}
 
+	public void MacGetsUp(){
+		audio.Stop();
+		audio.clip = FightMusic;
+		audio.Play();
+	}
 
 }

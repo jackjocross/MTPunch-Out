@@ -24,6 +24,11 @@ public class MarioLuigiController : MonoBehaviour {
 		marioHealthBar.fillAmount = marioHealth * 0.03125f;
 		luigiHealthBar = GameObject.Find ("Luigi Health").GetComponent<Image>();
 		luigiHealthBar.fillAmount = luigiHealth * 0.03125f;
+
+		if (luigiHealth <= 0) {
+			MarioLuigiAnimator.marioLuigiA.luigi.SetTrigger("Start Down");
+			MarioLuigiAnimator.marioLuigiA.mario.SetTrigger("Intro To Solo");
+		}
 	}
 
 	public void luigiHit(bool bodyHit) {
@@ -32,6 +37,7 @@ public class MarioLuigiController : MonoBehaviour {
 
 		if (luigiHealth == 0) {
 			MarioLuigiAnimator.marioLuigiA.luigi.SetTrigger("Fall Down");
+			MarioLuigiAnimator.marioLuigiA.mario.SetTrigger("Luigi Dead");
 		}
 		else if (bodyHit) {
 			MarioLuigiAnimator.marioLuigiA.luigi.SetTrigger("Punched");
@@ -41,12 +47,18 @@ public class MarioLuigiController : MonoBehaviour {
 		}
 	}
 
-	public void marioHit() {
+	public void marioHit(bool bodyHit) {
 		marioHealth -= 1;
 		marioHealthBar.fillAmount -= 0.03215f;
 		
 		if (marioHealth == 0) {
-			print ("mario is dead");
+			MarioLuigiAnimator.marioLuigiA.mario.SetTrigger("Knockdown");
+		}
+		else if (bodyHit) {
+			MarioLuigiAnimator.marioLuigiA.mario.SetTrigger("Hit");
+		}
+		else {
+			MarioLuigiAnimator.marioLuigiA.mario.SetTrigger("Head Hit");
 		}
 	}
 

@@ -4,14 +4,26 @@ using System.Collections.Generic;
 
 public class ClockScript : MonoBehaviour {
 
+	public static ClockScript clock;
+	
 	public GameObject[] digits;
 	public GameObject minutesObj;
 	public GameObject TSecObj;
 	public GameObject OSecObj;
 
+	public AudioClip RoundEnd;
+	private AudioSource source;
+	
 	private int updateTime = 0;
 	private int realTime = 0;
 	private bool started = false;
+	private bool gameEnded = false;
+	
+	void Awake(){
+		clock = this;
+		source=this.GetComponent<AudioSource>();
+		source.panLevel=0;
+	}
 
 	void FixedUpdate() {
 		if (started) timerUpdate ();
@@ -30,7 +42,7 @@ public class ClockScript : MonoBehaviour {
 			if (realTime >= 180) {
 				SaveScene.littleMacHealth = LittleMacController.LittleMac.health;
 				
-				if (MatchController.Match.roundNum == 1) {
+				if (MatchControllerML.Match.roundNum == 1) {
 					SaveScene.roundNum = 2;
 
 					if (Application.loadedLevelName.Equals("_Scene_Mario_Luigi")) {
@@ -44,7 +56,7 @@ public class ClockScript : MonoBehaviour {
 						Application.LoadLevel("_Scene_Round_Two_Original");
 					}
 				}
-				else if (MatchController.Match.roundNum == 2) {
+				else if (MatchControllerML.Match.roundNum == 2) {
 					SaveScene.roundNum = 3;
 
 					if (Application.loadedLevelName.Equals("_Scene_Mario_Luigi")) {

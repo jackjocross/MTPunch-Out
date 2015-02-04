@@ -28,7 +28,7 @@ public class roundOne : MonoBehaviour {
 			}
 		
 			else if (numUpdates == 200) {
-				Application.LoadLevel("_Scene_Jack");
+				Application.LoadLevel("_Scene_Josh");
 			}
 		}
 	}

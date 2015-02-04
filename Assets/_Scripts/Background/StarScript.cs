@@ -26,8 +26,10 @@ public class StarScript : MonoBehaviour {
 		starCount.GetComponent<SpriteRenderer>().sprite = digits[numStars].GetComponent<SpriteRenderer>().sprite;
 	}
 
-	public void removeStar() {
-		numStars=0;
+	public void removeStar(int star) {
+		if (numStars > 0) {
+			numStars -= star;
+		}
 		starCount.GetComponent<SpriteRenderer>().sprite = digits[numStars].GetComponent<SpriteRenderer>().sprite;
 	}
 
