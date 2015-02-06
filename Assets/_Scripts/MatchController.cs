@@ -9,20 +9,18 @@ public class MatchController : MonoBehaviour {
 
 	/*Audio Clips to be handle by match controller signaling end and beginning of round/match*/
 	public AudioClip VonKaiserIntroduction;
+	public AudioClip MarioLuigiIntroduction;
 	public AudioClip FightMusic;
 	public AudioClip Bell;
 	public AudioClip VonKaiserFalldownMusic;
 	public AudioClip LittleMacFalldownMusic;
 
 	/*Scripts that we need access to*/
-	public VonKaiserAnimator VonKaiser;
 	public LittleMacAnimator LittleMac;
 	public ClockScript clock;
 	public GameObject mario;
 	public LifeScript lifeScript;
 
-
-	private int startTime = 0;
 	/*Bool to determine which music to play*/
 	private bool introduction;
 	private bool fightMusic;
@@ -41,21 +39,17 @@ public class MatchController : MonoBehaviour {
 		audio.Play ();
 	}
 
-	void FixedUpdate() {
-		++startTime;
-
-		if (startTime == 500) {
-			clock.startTimer();
-		}
-
-	}
-
 	// Update is called once per frame
 	void Update () {
 		if (!audio.isPlaying) {
 			/*Play Von Kaiser Introduction if it hasn't been played*/
 			if(introduction==false){
-				audio.clip=VonKaiserIntroduction;
+				if (Application.loadedLevelName.Equals("_Scene_Josh")) {
+					audio.clip=VonKaiserIntroduction;
+				}
+				else {
+					audio.clip = MarioLuigiIntroduction;
+				}
 				audio.Play ();
 				introduction=true;
 				return;
@@ -80,6 +74,8 @@ public class MatchController : MonoBehaviour {
 		audio.Stop ();
 		audio.clip = FightMusic;
 		audio.Play ();
+		MarioAnimator.MarioA.animator.SetTrigger("Fight");
+		LittleMacAnimator.LittleMacA.animator.SetTrigger("Entrance");
 	}
 
 	public void MacFallsDown(){
@@ -92,6 +88,10 @@ public class MatchController : MonoBehaviour {
 		audio.Stop();
 		audio.clip = FightMusic;
 		audio.Play();
+	}
+
+	public void stopMusic() {
+		audio.Stop();
 	}
 
 }

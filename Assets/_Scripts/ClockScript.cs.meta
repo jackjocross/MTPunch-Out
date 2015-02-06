@@ -2,7 +2,11 @@ fileFormatVersion: 2
 guid: 1d731d75fc85f4411b7513b0c3677491
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - minutesObj: {instanceID: 0}
+  - TSecObj: {instanceID: 0}
+  - OSecObj: {instanceID: 0}
+  - RoundEnd: {fileID: 8300000, guid: dd598b71df3b745eeaa2754eba645c7a, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -9,11 +9,17 @@ public class LifeScript : MonoBehaviour {
 
 	public GameObject lifeOnes;
 	public GameObject lifeTens;
+	public static bool isMacTired;
 
-	public int numLives = 0;
+	public int numLives;
 
 	void Awake() {
 		LifeController = this;
+		isMacTired = false;
+	}
+
+	void Start() {
+		numLives = SaveScene.hearts;
 	}
 
 	public void addLife(int life) {
@@ -32,6 +38,7 @@ public class LifeScript : MonoBehaviour {
 	}
 
 	public void removeLife(int life) {
+
 		numLives -= life;
 		int tempLives = numLives;
 
@@ -43,5 +50,11 @@ public class LifeScript : MonoBehaviour {
 		} else {
 			lifeTens.GetComponent<SpriteRenderer> ().sprite = digits [tempLives % 10].GetComponent<SpriteRenderer> ().sprite;
 		}
+
+		if ((numLives == 0) && (!isMacTired)) {
+			isMacTired = true;
+			LittleMacAnimator.LittleMacA.animator.SetTrigger("Tired");
+		}
+
 	}
 }

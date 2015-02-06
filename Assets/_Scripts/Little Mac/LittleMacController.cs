@@ -29,8 +29,9 @@ public class LittleMacController : MonoBehaviour {
 		else {
 			vonKaiserPlaying = false;
 		}
+
 		LittleMac = this;
-		knockdowns=0;
+
 		canShield = true;
 	}
 	
@@ -40,6 +41,7 @@ public class LittleMacController : MonoBehaviour {
 		animatorScript = this.GetComponent<LittleMacAnimator>();
 		LittleMacHealth = GameObject.Find("Little Mac Health").GetComponent<Image>();
 		LittleMacHealth.fillAmount = health * 0.01f;
+		knockdowns = SaveScene.knockdowns;
 	}
 	
 	// Update is called once per frame
@@ -48,7 +50,7 @@ public class LittleMacController : MonoBehaviour {
 			/*If down key (or S) is held down, should stay in shield position*/
 			if(Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)){
 				if(canShield==true){
-					if(Time.time-animatorScript.animator.GetFloat("shieldTime")<tapSpeed){
+					if(Time.time - animatorScript.animator.GetFloat("shieldTime") < tapSpeed){
 						//animatorScript.Duck();
 						animatorScript.animator.SetFloat("shieldTime",0);
 					}
@@ -61,12 +63,21 @@ public class LittleMacController : MonoBehaviour {
 				}
 			}
 			if (Input.GetKeyUp (KeyCode.DownArrow) || Input.GetKeyUp (KeyCode.S)) {
+				print("lifting shield");
 				animatorScript.ShieldEnd();
 				canShield=true;
 			}
 
+
+
 			/*Little Mac is in various stages of Knockdown State, must quickly press buttons to advance back to idle*/
 			if (animatorScript.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Falldown") || animatorScript.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Gets Up Stage 1") || animatorScript.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Gets Up Stage 2") || animatorScript.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Gets Up Stage 3")) {
+				if(LittleMacController.vonKaiserPlaying && VonKaiserAnimator.VonKaiserA.animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Victory")){
+					return;
+				}
+				else if (MarioLuigiAnimator.marioLuigiA.mario.GetCurrentAnimatorStateInfo(0).IsName("Enemy Mario Victory Dance")) {
+					return;
+				}
 				if(Input.GetKeyUp(KeyCode.X)||Input.GetKeyUp(KeyCode.Period)){
 					numberOfButtonPresses++;
 				}
@@ -83,9 +94,7 @@ public class LittleMacController : MonoBehaviour {
 				}
 
 				if(numberOfButtonPresses==12){
-					if(VonKaiserAnimator.VonKaiserA.animator.GetCurrentAnimatorStateInfo(0).IsName("Von Kaiser Victory")){
-						return;
-					}
+
 					animatorScript.animator.SetTrigger("Get Up Stage 3");
 					MatchController.Match.MacGetsUp();
 					MarioAnimator.MarioA.animator.SetTrigger("Fight");
@@ -94,12 +103,12 @@ public class LittleMacController : MonoBehaviour {
 				return;
 			}
 
+
+		
 			/*Don't queue button presses when you're in the middle of animation*/
 			if (IsAnimationActionPlaying ()) {
 				return;
 			}
-
-		}
 
 			/*GetKeyDown only returns selection for one frame so need to check GetKey to check if key is held down*/
 			if (Input.GetKey (KeyCode.UpArrow)) {
@@ -142,124 +151,205 @@ public class LittleMacController : MonoBehaviour {
 					return;
 				}
 			}
-		
 
+
+			if(Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)){
+				animatorScript.DodgeRight();
+			}
+			if(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A)){
+				animatorScript.DodgeLeft();
+			}
+			if(Input.GetKeyDown (KeyCode.Return)){
+				animatorScript.StarPunch();
+			}
+			/*A Button*/
+			if (Input.GetKeyDown (KeyCode.X) || Input.GetKeyDown (KeyCode.Period)) {
+				animatorScript.PunchRightNormal();
+			}
+			/*B Button*/
+			if (Input.GetKeyDown (KeyCode.Z) || Input.GetKeyDown (KeyCode.Comma)) {
+				animatorScript.PunchLeftNormal();
+			}
+			/*Select*/
+			if(Input.GetKeyDown(KeyCode.Tab)){
+			}
+		}
 		/*==============================MARIO LUIGI CONTROLS=========================================*/
+		else {
+			if(Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)){
+				// little mac twitches if mario is clinging to him
+				if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Stuck")) {
+					LittleMacAnimator.LittleMacA.Twitch();
+					return;
+				}
+				else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Twitch")) {
+					return;
+				}
+				else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Hold Punch")) {
+					return;
+				}
 
-		/*Directional Inputs*/
-
-		/*If down key (or S) is held down, should stay in shield position*/
-		if(Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)){
-
-			// little mac twitches if mario is clinging to him
-			if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Stuck")) {
-				LittleMacAnimator.LittleMacA.Twitch();
-				return;
+				if(canShield==true){
+					if(Time.time - animatorScript.animator.GetFloat("shieldTime") < tapSpeed){
+						//animatorScript.Duck();
+						animatorScript.animator.SetFloat("shieldTime",0);
+					}
+					else{
+						animatorScript.ShieldBegin();
+						canShield=false;
+						/*Record time of shield press*/
+						animatorScript.animator.SetFloat("shieldTime",Time.time);
+					}
+				}
 			}
-			else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Twitch")) {
-				return;
+			if (Input.GetKeyUp (KeyCode.DownArrow) || Input.GetKeyUp (KeyCode.S)) {
+				print("lifting shield");
+				animatorScript.ShieldEnd();
+				canShield=true;
 			}
+		
+			/*GetKeyDown only returns selection for one frame so need to check GetKey to check if key is held down*/
+			if (Input.GetKey (KeyCode.UpArrow)) {
+				// little mac twitches if mario is clinging to him
+				if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Stuck")) {
+					LittleMacAnimator.LittleMacA.Twitch();
+					return;
+				}
+				else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Twitch")) {
+					return;
+				}
+				else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Hold Punch")) {
+					return;
+				}
 
-			if(Time.time-animatorScript.animator.GetFloat("shieldTime")<tapSpeed){
-				//animatorScript.Duck();
-				animatorScript.animator.SetFloat("shieldTime",0);
+				/*Right Face Punch*/
+				if(Input.GetKeyDown(KeyCode.X)){
+					animatorScript.PunchRightFace();
+					return;
+				}
+				if(Input.GetKeyDown(KeyCode.Period)){
+					animatorScript.PunchRightFace();
+					return;
+				}
+				/*Left Punch Face*/
+				if(Input.GetKeyDown(KeyCode.Z)){
+					animatorScript.PunchLeftFace();
+					return;
+				}
+				if(Input.GetKeyDown (KeyCode.Comma)){
+					animatorScript.PunchLeftFace();
+					return;
+				}
 			}
-			else{
-				animatorScript.ShieldBegin();
-				/*Record time of shield press*/
-				animatorScript.animator.SetFloat("shieldTime",Time.time);
-			}
-		}
-		if (Input.GetKey (KeyCode.DownArrow) || Input.GetKey (KeyCode.S)) {
-
-			// little mac twitches if mario is clinging to him
-			if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Stuck")) {
-				LittleMacAnimator.LittleMacA.Twitch();
-				return;
-			}
-			else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Twitch")) {
-				return;
-			}
-
-			animatorScript.ShieldEnd();
-		}
-	
-		if(Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)){
-
-			// little mac twitches if mario is clinging to him
-			if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Stuck")) {
-				LittleMacAnimator.LittleMacA.Twitch();
-				return;
-			}
-			else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Twitch")) {
-				return;
-			}
-
-			animatorScript.DodgeRight();
-		}
-		if(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A)){
-
-			// little mac twitches if mario is clinging to him
-			if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Stuck")) {
-				LittleMacAnimator.LittleMacA.Twitch();
-				return;
-			}
-			else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Twitch")) {
-				return;
-			}
-
-			animatorScript.DodgeLeft();
-		}
-		if(Input.GetKeyDown (KeyCode.Return)){
-
-			// little mac twitches if mario is clinging to him
-			if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Stuck")) {
-				LittleMacAnimator.LittleMacA.Twitch();
-				return;
-			}
-			else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Twitch")) {
-				return;
-			}
-
-			animatorScript.StarPunch();
-		}
-
-		/*A Button*/
-		if (Input.GetKeyDown (KeyCode.X) || Input.GetKeyDown (KeyCode.Period)) {
-
-			// little mac twitches if mario is clinging to him
-			if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Stuck")) {
-				LittleMacAnimator.LittleMacA.Twitch();
-				return;
-			}
-			else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Twitch")) {
-				return;
-			}
-
-			animatorScript.PunchRightNormal();
-		}
-		/*B Button*/
-		if (Input.GetKeyDown (KeyCode.Z) || Input.GetKeyDown (KeyCode.Comma)) {
-
-			// little mac twitches if mario is clinging to him
-			if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Stuck")) {
-				LittleMacAnimator.LittleMacA.Twitch();
-				return;
-			}
-			else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Twitch")) {
-				return;
+			if (Input.GetKey(KeyCode.W)){
+				if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Stuck")) {
+					LittleMacAnimator.LittleMacA.Twitch();
+					return;
+				}
+				else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Twitch")) {
+					return;
+				}
+				else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Hold Punch")) {
+					return;
+				}
+				/*Right Punch Face*/
+				if(Input.GetKeyDown(KeyCode.X)){
+					animatorScript.PunchRightFace();
+					return;
+				}
+				if(Input.GetKeyDown(KeyCode.Period)){
+					animatorScript.PunchRightFace();
+					return;
+				}
+				/*Left Punch Face*/
+				if(Input.GetKeyDown(KeyCode.Z)){
+					animatorScript.PunchLeftFace();
+					return;
+				}
+				if(Input.GetKeyDown (KeyCode.Comma)){
+					animatorScript.PunchLeftFace();
+					return;
+				}
 			}
 
-			animatorScript.PunchLeftNormal();
-		}
-		/*Select*/
-		if(Input.GetKeyDown(KeyCode.Tab)){
+			if(Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)){
+
+				// little mac twitches if mario is clinging to him
+				if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Stuck")) {
+					LittleMacAnimator.LittleMacA.Twitch();
+					return;
+				}
+				else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Twitch")) {
+					return;
+				}
+				else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Hold Punch")) {
+					return;
+				}
+
+				animatorScript.DodgeRight();
+			}
+			if(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A)){
+
+				// little mac twitches if mario is clinging to him
+				if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Stuck")) {
+					LittleMacAnimator.LittleMacA.Twitch();
+					return;
+				}
+				else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Twitch")) {
+					return;
+				}
+				else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Hold Punch")) {
+					return;
+				}
+
+				animatorScript.DodgeLeft();
+			}
+			/*A Button*/
+			if (Input.GetKeyDown (KeyCode.X) || Input.GetKeyDown (KeyCode.Period)) {
+
+				// little mac twitches if mario is clinging to him
+				if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Stuck")) {
+					LittleMacAnimator.LittleMacA.Twitch();
+					return;
+				}
+				else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Twitch")) {
+					return;
+				}
+				else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Hold Punch")) {
+					return;
+				}
+
+				animatorScript.PunchRightNormal();
+			}
+			/*B Button*/
+			if (Input.GetKeyDown (KeyCode.Z) || Input.GetKeyDown (KeyCode.Comma)) {
+
+				// little mac twitches if mario is clinging to him
+				if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Stuck")) {
+					LittleMacAnimator.LittleMacA.Twitch();
+					return;
+				}
+				else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Twitch")) {
+					return;
+				}
+				else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Hold Punch")) {
+					return;
+				}
+
+				animatorScript.PunchLeftNormal();
+			}
 		}
 	}
 
 	/*Return true if animation is playing besides idle*/
 	bool IsAnimationActionPlaying(){
-		return !animatorScript.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Idle");
+		if (animatorScript.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Idle")) {
+			return false;
+		}
+		else if (animatorScript.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Idle Tired")) {
+			return false;
+		}
+		return true;
 	}
 	
 }

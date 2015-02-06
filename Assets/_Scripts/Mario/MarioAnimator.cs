@@ -9,6 +9,7 @@ public class MarioAnimator : MonoBehaviour {
 	public AudioClip MarioFightSound;
 	public AudioClip MarioCountSound;
 	public AudioClip MarioTKOSound;
+	public AudioClip win;
 
 	private AudioSource source;
 
@@ -52,6 +53,8 @@ public class MarioAnimator : MonoBehaviour {
 			LittleMacAnimator.LittleMacA.animator.SetTrigger("Get Up Walk");
 			VonKaiserAnimator.VonKaiserA.animator.SetTrigger("Return To Fight");
 			VonKaiserAnimator.VonKaiserA.animator.SetBool("Punch",true);
+			LifeScript.LifeController.addLife(20 - LifeScript.LifeController.numLives);
+
 			if(LittleMacController.LittleMac.knockdowns==1){
 				LittleMacController.LittleMac.health=100/3;
 				LittleMacController.LittleMac.LittleMacHealth.fillAmount=.333f;
@@ -71,21 +74,29 @@ public class MarioAnimator : MonoBehaviour {
 	public void MarioCountDown(int number){
 
 		if (number == 0) {
-			/*Von Kaiser gets TKOed*/
-			if(VonKaiserController.VonKaiserC.knockdowns==3){
-				print ("loading mario luigi scene");
-				animator.SetTrigger ("TKO");
-				LittleMacAnimator.LittleMacA.animator.SetTrigger("Victory");
+			Invoke("loadStartScreen", 8f);
+			if (LittleMacController.vonKaiserPlaying) {
+				/*Von Kaiser gets TKOed*/
+
+				if(VonKaiserController.VonKaiserC.knockdowns==3){
+					animator.SetTrigger ("TKO");
+					LittleMacAnimator.LittleMacA.animator.SetTrigger("Victory");
+				}
+			}
+			else {
+				if(MarioLuigiAnimator.marioLuigiA.mario.GetCurrentAnimatorStateInfo(0).IsName("Enemy Mario Down")){
+					animator.SetTrigger ("TKO");
+					LittleMacAnimator.LittleMacA.animator.SetTrigger("Victory");
+				}
 			}
 			/*Little Mac gets TKOed*/
 			if(LittleMacController.LittleMac.knockdowns==3){
-				print ("Mac Gets KOed");
 				animator.SetTrigger("TKO");
 			}
 		}
 		if(number==1){
 			if(VonKaiserController.VonKaiserC.knockdowns==1){
-				animator.SetTrigger("Fight");
+				animator.SetTrigger("Intro");
 				VonKaiserController.VonKaiserHealth.fillAmount=.5f;
 				VonKaiserController.health=16f;
 				if (VonKaiserAnimator.VonKaiserA.animator.GetCurrentAnimatorStateInfo (0).IsName ("Von Kaiser Knockdown Right")) {
@@ -99,7 +110,7 @@ public class MarioAnimator : MonoBehaviour {
 
 		if(number==3){
 			if(VonKaiserController.VonKaiserC.knockdowns==2){
-				animator.SetTrigger("Fight");
+				animator.SetTrigger("Intro");
 				VonKaiserController.VonKaiserHealth.fillAmount=.5f;
 				VonKaiserController.health=16f;
 				if (VonKaiserAnimator.VonKaiserA.animator.GetCurrentAnimatorStateInfo (0).IsName ("Von Kaiser Knockdown Right")) {
@@ -110,6 +121,7 @@ public class MarioAnimator : MonoBehaviour {
 				}
 			}
 		}
+
 		source.PlayOneShot(MarioCountSound,1f);
 
 		/*If Mario reaches ten, KO*/
@@ -120,8 +132,19 @@ public class MarioAnimator : MonoBehaviour {
 
 			}
 			if(LittleMacController.LittleMac.health<=0){
-				VonKaiserAnimator.VonKaiserA.animator.SetTrigger("Victory");
+				if (LittleMacController.vonKaiserPlaying) {
+					VonKaiserAnimator.VonKaiserA.animator.SetTrigger("Victory");
+				} 
+				else {
+					MarioLuigiAnimator.marioLuigiA.mario.SetTrigger("Victory");
+					MarioLuigiAnimator.marioLuigiA.luigi.SetTrigger("Victory");
+				}
 			}
+			Invoke("loadStartScreen", 4f);
 		}
+	}
+
+	public void loadStartScreen() {
+		Application.LoadLevel ("_Scene_Start");
 	}
 }
