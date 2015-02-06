@@ -17,7 +17,6 @@ public class VonKaiserController : MonoBehaviour {
 
 	void Awake() {
 		VonKaiserC = this;
-		knockdowns=0;
 	}
 
 	// Use this for initialization
@@ -25,6 +24,7 @@ public class VonKaiserController : MonoBehaviour {
 		health = SaveScene.vonKaiserHealth;
 		VonKaiserHealth = GameObject.Find ("Von Kaiser Health").GetComponent<Image>();
 		VonKaiserHealth.fillAmount = health * 0.03125f;
+		knockdowns = SaveScene.VonKaiserKnockdowns;
 		VonKaiserAnimator.VonKaiserA.intro ();
 	}
 
@@ -99,6 +99,17 @@ public class VonKaiserController : MonoBehaviour {
 
 	public void VonKaiserGetsUp(){
 		MatchController.Match.VonKaiserGetsUp();
+	}
+
+	/*This function handles Von Kaiser at the peak of his jab to determine if a hit occurs*/
+	public void VonKaiserJabClimax(){
+		//print ("called jab climax");
+		LittleMacAnimator.LittleMacA.handleVonKaiserJab();	
+	}
+
+	/*This function handles Von Kaiser at the peak of his uppercut to determien if a hit occurs*/
+	public void VonKaiserUppercutClimax(){
+		LittleMacAnimator.LittleMacA.handleVonKaiserUppercut();
 	}
 	
 }

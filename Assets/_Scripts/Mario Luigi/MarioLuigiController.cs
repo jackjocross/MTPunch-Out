@@ -32,10 +32,12 @@ public class MarioLuigiController : MonoBehaviour {
 	}
 
 	public void luigiHit(bool bodyHit) {
+		PointScript.PointController.addPoints(10);
 		luigiHealth -= 1;
 		luigiHealthBar.fillAmount -= 0.03215f;
 
 		if (luigiHealth == 0) {
+			PointScript.PointController.addPoints(1010);
 			MarioLuigiAnimator.marioLuigiA.luigi.SetTrigger("Fall Down");
 			MarioLuigiAnimator.marioLuigiA.mario.SetTrigger("Luigi Dead");
 		}
@@ -48,10 +50,12 @@ public class MarioLuigiController : MonoBehaviour {
 	}
 
 	public void marioHit(bool bodyHit) {
+		PointScript.PointController.addPoints(10);
 		marioHealth -= 1;
 		marioHealthBar.fillAmount -= 0.03215f;
 		
 		if (marioHealth == 0) {
+			PointScript.PointController.addPoints(1010);
 			MarioLuigiAnimator.marioLuigiA.mario.SetTrigger("Knockdown");
 		}
 		else if (bodyHit) {

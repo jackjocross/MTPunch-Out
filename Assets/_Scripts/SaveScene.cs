@@ -12,6 +12,9 @@ public class SaveScene : MonoBehaviour {
 	public static int roundNum;
 	public static int hearts;
 	public static int stars;
+	public static int LittleMacKnockdowns;
+	public static int VonKaiserKnockdowns;
+	public static int Points;
 
 	void Awake() {
 		saveData = this;
@@ -24,6 +27,9 @@ public class SaveScene : MonoBehaviour {
 			littleMacHealth = 100;
 			hearts = 20;
 			stars = 0;
+			LittleMacKnockdowns=0;
+			VonKaiserKnockdowns=0;
+			Points=0;
 		}
 	}
 

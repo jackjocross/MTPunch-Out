@@ -21,6 +21,10 @@ public class PointScript : MonoBehaviour {
 		resetScore();
 	}
 
+	void Start(){
+		addPoints(SaveScene.Points);
+	}
+
 	public void addPoints (int points) {
 
 		curScore += points;
@@ -66,6 +70,10 @@ public class PointScript : MonoBehaviour {
 			pointsHThou.GetComponent<SpriteRenderer>().sprite = digits[tempScore % 10].GetComponent<SpriteRenderer>().sprite;
 		}
 
+	}
+
+	public int getCurrentScore(){
+		return curScore;
 	}
 
 	void resetScore() {

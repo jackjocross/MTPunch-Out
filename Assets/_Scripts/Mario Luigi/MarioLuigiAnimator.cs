@@ -7,27 +7,34 @@ public class MarioLuigiAnimator : MonoBehaviour {
 	public Animator mario;
 	public Animator luigi;
 
-	private bool fightStarted = false;
 	private int numLuigiPunches = 0;
 	private int lastAction = 0;
 
-	private int gameSpeed = 0;
+	public static bool fightStarted;
+
+	private long gameSpeed = 0;
 
 	private AnimatorStateInfo marioCurrent, luigiCurrent, littleMacCurrent;
 
 	void Awake() {
 		marioLuigiA = this;
+		fightStarted = false;
 	}
 
 	void FixedUpdate() {
-		if (!fightStarted) return;
+		if ((fightStarted == false) && (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Idle"))) {
+			fightStarted = true;
+		}
+		else if (fightStarted == false) {
+			return;
+		}
+
 
 		gameSpeed++;
 
 		if ((gameSpeed % 10) != 0) {
 			return;
 		}
-
 		marioCurrent = mario.GetCurrentAnimatorStateInfo (0);
 		luigiCurrent = luigi.GetCurrentAnimatorStateInfo (0);
 		littleMacCurrent = LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo (0);
@@ -36,12 +43,11 @@ public class MarioLuigiAnimator : MonoBehaviour {
 			return;
 		}
 
-		if (LittleMacAnimator.LittleMacA.lastBattleHappened == true) {
+		if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Stuck")) {
+
 			if (luigiCurrent.IsName("Enemy Luigi Punch")) {
 				return;
 			}
-
-			print ("luigi should be punching!");
 			
 			if (numLuigiPunches == 5) {
 				mario.SetTrigger("Release");
@@ -50,11 +56,11 @@ public class MarioLuigiAnimator : MonoBehaviour {
 				return;
 			}
 			
-			print ("telling luigi to punch!");
-			
+
 			luigi.SetTrigger("Punch");
 			numLuigiPunches++;
 		}
+
 
 		if (littleMacCurrent.IsName ("Little Mac Idle") && (lastAction == 0)) {
 			if (marioCurrent.IsName("Enemy Mario Cling") || marioCurrent.IsName("Enemy Mario Cling Hold") || marioCurrent.IsName("Enemy Mario Cling Miss") || marioCurrent.IsName("Enemy Mario Cling Twitch")) {
@@ -78,27 +84,7 @@ public class MarioLuigiAnimator : MonoBehaviour {
 				lastAction++;
 			}
 		}
-		else if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo(0).IsName("Little Mac Stuck")) {
-			if (luigiCurrent.IsName("Enemy Luigi Punch")) {
-				return;
-			}
 
-			if (numLuigiPunches == 5) {
-				mario.SetTrigger("Release");
-				LittleMacAnimator.LittleMacA.animator.SetTrigger("Released");
-				numLuigiPunches = 0;
-				return;
-			}
-
-			print ("telling luigi to punch!");
-
-			luigi.SetTrigger("Punch");
-			numLuigiPunches++;
-		}
-	}
-
-	public void startOfFight() {
-		fightStarted = true;
 	}
 
 	public void marioBodyDodge() {
@@ -121,6 +107,10 @@ public class MarioLuigiAnimator : MonoBehaviour {
 	public void punchedByMario() {
 		// if little mac isn't dodging, he gets punched
 		if (!LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Dodge Left")) {
+			if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Dodge Right") && (luigi.GetCurrentAnimatorStateInfo(0).IsName("Enemy Luigi Down"))) {
+				return;
+			}
+
 			if (isLittleMacKnockdown()) {
 				return;
 			}
@@ -178,7 +168,7 @@ public class MarioLuigiAnimator : MonoBehaviour {
 
 	private bool isLittleMacKnockdown() {
 		if (LittleMacController.LittleMac.health <= 0) {
-			LittleMacAnimator.LittleMacA.animator.SetTrigger("Little Mac Falldown");
+			LittleMacAnimator.LittleMacA.animator.SetTrigger("Falldown");
 			return true;
 		}
 
@@ -187,6 +177,14 @@ public class MarioLuigiAnimator : MonoBehaviour {
 
 	public void marioEncourage() {
 		luigi.SetTrigger ("Reborn");
+	}
+
+	public void macTired() {
+		if (LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Dodge Right Tired") || LittleMacAnimator.LittleMacA.animator.GetCurrentAnimatorStateInfo (0).IsName ("Little Mac Dodge Left Tired")) {
+			LifeScript.LifeController.addLife(20);
+			LittleMacAnimator.LittleMacA.animator.SetTrigger("Untired");
+			LifeScript.isMacTired = false;
+		}
 	}
 
 }
